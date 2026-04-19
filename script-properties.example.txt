@@ -1,0 +1,15 @@
+Copy these NAMES into Apps Script → Project Settings → Script properties (values come from Firebase Web config, never commit real values to git).
+
+FIREBASE_API_KEY
+FIREBASE_AUTH_DOMAIN
+FIREBASE_PROJECT_ID
+FIREBASE_APP_ID
+FIREBASE_STORAGE_BUCKET   (recommended for Pagos capturas)
+FIREBASE_MESSAGING_SENDER_ID   (optional)
+
+Device lock (bloqueo por huella; Apps Script DeviceLock.gs):
+FIREBASE_SERVICE_ACCOUNT_JSON   (one-line JSON de la cuenta de servicio con permiso Firestore / datastore)
+DEVICE_DEV_PIN   (optional; default en código DEV2026BUCARA — mejor definir aquí en producción)
+DEVICE_LOCK_DISABLED   (optional; "true" = desactiva el lock en dev sin SA)
+
+After saving properties, reload the web app deployment.

@@ -1,0 +1,3133 @@
+<!DOCTYPE html>
+<html lang="es" class="h-full">
+<head>
+  <meta charset="UTF-8" />
+  <base target="_top" />
+  <meta name="theme-color" content="#0f172a" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          fontFamily: { sans: ['system-ui', 'Segoe UI', 'Roboto', 'sans-serif'] },
+        },
+      },
+    };
+  </script>
+  <link
+    rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
+    crossorigin="anonymous"
+    referrerpolicy="no-referrer"
+  />
+  <style>
+    #app-root[hidden],
+    #login-root[hidden],
+    #role-modal[hidden],
+    #modal-cierre[hidden] {
+      display: none !important;
+    }
+    .bottom-safe {
+      height: env(safe-area-inset-bottom, 0px);
+    }
+    .touch-hit {
+      min-height: 3.5rem;
+    }
+    [x-cloak] {
+      display: none !important;
+    }
+    .card {
+      background: #fff;
+      border: 1px solid #e2e8f0;
+      border-radius: 1rem;
+      padding: 1rem;
+      margin-bottom: 0.75rem;
+    }
+    .dark .card {
+      background: #0f172a;
+      border-color: #334155;
+    }
+    .card h2 {
+      margin: 0 0 10px;
+      font-size: 1rem;
+      font-weight: 600;
+      color: #0f172a;
+    }
+    .dark .card h2 {
+      color: #f1f5f9;
+    }
+    .row {
+      display: flex;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+    }
+    .row > * {
+      flex: 1;
+      min-width: 120px;
+    }
+    label {
+      display: block;
+      font-size: 0.75rem;
+      color: #64748b;
+      margin-bottom: 0.35rem;
+    }
+    .dark label {
+      color: #94a3b8;
+    }
+    input,
+    textarea,
+    select {
+      width: 100%;
+      padding: 0.65rem 0.75rem;
+      border-radius: 0.75rem;
+      border: 1px solid #cbd5e1;
+      background: #f8fafc;
+      color: #0f172a;
+      font-size: 1rem;
+    }
+    .dark input,
+    .dark textarea,
+    .dark select {
+      border-color: #475569;
+      background: #020617;
+      color: #f1f5f9;
+    }
+    textarea {
+      min-height: 120px;
+      resize: vertical;
+    }
+    .muted {
+      color: #64748b;
+      font-size: 0.82rem;
+    }
+    .dark .muted {
+      color: #94a3b8;
+    }
+    .banner {
+      padding: 0.65rem 0.85rem;
+      border-radius: 0.75rem;
+      background: rgba(239, 68, 68, 0.12);
+      border: 1px solid rgba(239, 68, 68, 0.35);
+      color: #b91c1c;
+      font-size: 0.88rem;
+      margin-bottom: 0.75rem;
+    }
+    .dark .banner {
+      color: #fecaca;
+    }
+    .list {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+    .list li {
+      padding: 0.65rem 0;
+      border-bottom: 1px solid #e2e8f0;
+      font-size: 0.9rem;
+    }
+    .dark .list li {
+      border-color: #334155;
+    }
+    .list li:last-child {
+      border-bottom: none;
+    }
+    .badge {
+      display: inline-block;
+      font-size: 0.72rem;
+      padding: 2px 8px;
+      border-radius: 999px;
+      margin-right: 6px;
+      font-weight: 600;
+    }
+    .badge.open {
+      background: rgba(34, 197, 94, 0.2);
+      color: #16a34a;
+    }
+    .badge.close {
+      background: rgba(239, 68, 68, 0.2);
+      color: #dc2626;
+    }
+    .badge.venta {
+      background: rgba(59, 130, 246, 0.2);
+      color: #2563eb;
+    }
+    .badge.gasto {
+      background: rgba(245, 158, 11, 0.2);
+      color: #d97706;
+    }
+    .badge.abono {
+      background: rgba(168, 85, 247, 0.2);
+      color: #9333ea;
+    }
+    .badge.pend {
+      background: rgba(148, 163, 184, 0.25);
+      color: #64748b;
+    }
+    .badge.ok {
+      background: rgba(34, 197, 94, 0.2);
+      color: #16a34a;
+    }
+    table.catalog {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.82rem;
+    }
+    table.catalog th,
+    table.catalog td {
+      border-bottom: 1px solid #e2e8f0;
+      padding: 8px 4px;
+      text-align: left;
+    }
+    .dark table.catalog th,
+    .dark table.catalog td {
+      border-color: #334155;
+    }
+    table.catalog th {
+      color: #64748b;
+      font-weight: 600;
+    }
+    .pill-admin {
+      font-size: 0.72rem;
+      padding: 2px 10px;
+      border-radius: 999px;
+      background: rgba(16, 185, 129, 0.15);
+      color: #059669;
+      font-weight: 600;
+    }
+    .dark .pill-admin {
+      background: rgba(16, 185, 129, 0.25);
+      color: #34d399;
+    }
+    .nav-tab-active {
+      background: rgba(16, 185, 129, 0.2) !important;
+      color: #059669 !important;
+    }
+    .dark .nav-tab-active {
+      background: rgba(16, 185, 129, 0.25) !important;
+      color: #34d399 !important;
+    }
+    .erp-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.35rem;
+      border-radius: 0.75rem;
+      padding: 0.65rem 1rem;
+      font-weight: 600;
+      font-size: 0.9rem;
+      border: none;
+      cursor: pointer;
+      background: #059669;
+      color: #fff;
+    }
+    .erp-btn:disabled {
+      opacity: 0.45;
+      cursor: not-allowed;
+    }
+    .erp-btn.secondary {
+      background: #e2e8f0;
+      color: #0f172a;
+    }
+    .dark .erp-btn.secondary {
+      background: #334155;
+      color: #f1f5f9;
+    }
+    .erp-btn.danger {
+      background: #dc2626;
+      color: #fff;
+    }
+  </style>
+  <script src="https://cdn.jsdelivr.net/npm/@fingerprintjs/fingerprintjs@4.5.1/dist/fp.umd.min.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-storage-compat.js"></script>
+  <link
+    href="https://cdn.jsdelivr.net/npm/daisyui@4.12.10/dist/full.min.css"
+    rel="stylesheet"
+    type="text/css"
+  />
+</head>
+<body class="min-h-[100dvh] flex flex-col bg-slate-100 dark:bg-slate-950 text-slate-900 dark:text-slate-50">
+  <script>
+    (function () {
+      try {
+        localStorage.setItem('__miniErpProbe', '1');
+        localStorage.removeItem('__miniErpProbe');
+        window.__miniErpLocalStorageOk = true;
+      } catch (e) {
+        window.__miniErpLocalStorageOk = false;
+      }
+      try {
+        sessionStorage.setItem('__miniErpProbe', '1');
+        sessionStorage.removeItem('__miniErpProbe');
+        window.__miniErpSessionStorageOk = true;
+      } catch (e2) {
+        window.__miniErpSessionStorageOk = false;
+      }
+    })();
+  </script>
+  <div id="boot-error" class="banner mx-3 mt-2 shrink-0" hidden></div>
+
+  <div
+    id="role-modal"
+    class="fixed inset-0 z-[200] flex items-center justify-center bg-black/50 p-4"
+    hidden
+  >
+    <div class="card w-full max-w-sm" style="margin-bottom: 0">
+      <h2 class="text-lg font-bold text-slate-900 dark:text-white mb-1">¿Cómo usarás la app?</h2>
+      <p class="muted mb-4">Elige tu rol (solo usuarios no admin). Podrás cambiarlo después en el menú.</p>
+      <button type="button" class="erp-btn w-full mb-2 touch-hit" id="role-pick-cajero">
+        <i class="fa-solid fa-cash-register"></i> Cajero (caja + compras + traslados)
+      </button>
+      <button type="button" class="erp-btn secondary w-full touch-hit" id="role-pick-empleado">
+        <i class="fa-solid fa-user"></i> Empleado (nómina + pagos)
+      </button>
+    </div>
+  </div>
+
+  <div
+    id="modal-cierre"
+    class="fixed inset-0 z-[90] flex items-end sm:items-center justify-center bg-black/50 sm:p-4"
+    hidden
+  >
+    <div
+      class="card w-full max-w-lg rounded-t-2xl sm:rounded-2xl max-h-[88vh] overflow-y-auto sm:mb-0"
+      style="margin-bottom: 0"
+    >
+      <div class="flex justify-between items-center gap-2 mb-3">
+        <h2 class="text-lg font-bold text-slate-900 dark:text-white m-0">Cierre de caja</h2>
+        <button type="button" class="erp-btn secondary !px-3 !py-2" id="modal-cierre-close" aria-label="Cerrar">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+      </div>
+      <p class="muted text-sm mb-3 m-0">
+        Vista previa del día (America/Bogotá). Descarga el Informe Z o ve al formulario para registrar el cierre.
+      </p>
+      <pre
+        id="cierre-preview"
+        class="text-xs leading-relaxed font-mono bg-slate-100 dark:bg-slate-900 text-slate-800 dark:text-slate-200 p-3 rounded-xl mb-3 whitespace-pre-wrap overflow-x-auto m-0"
+      ></pre>
+      <div class="row">
+        <button type="button" class="erp-btn secondary" id="btn-cierre-csv">
+          <i class="fa-solid fa-file-arrow-down"></i> CSV Informe Z
+        </button>
+        <button type="button" class="erp-btn" id="btn-cierre-go-form">
+          <i class="fa-solid fa-pen"></i> Registrar cierre
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <header
+    class="sticky top-0 z-40 flex flex-wrap items-center justify-between gap-2 border-b border-slate-200 dark:border-slate-800 bg-white/95 dark:bg-slate-900/95 backdrop-blur px-3 py-2.5 shrink-0"
+  >
+    <div class="flex items-center gap-2 min-w-0">
+      <span
+        class="inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-emerald-600 text-white text-sm font-bold shadow-sm"
+        >E</span>
+      <div class="min-w-0">
+        <h1 class="text-sm font-bold leading-tight m-0 truncate">Mini ERP</h1>
+        <p class="text-[10px] text-slate-500 dark:text-slate-400 leading-none m-0">POS / inventario</p>
+      </div>
+    </div>
+    <span id="header-meta" class="flex items-center gap-1.5 flex-wrap justify-end">
+      <span id="header-role" class="pill-admin" hidden>—</span>
+      <button
+        type="button"
+        id="btn-notif"
+        class="erp-btn secondary !p-2 !px-2.5 hidden"
+        title="Notificaciones"
+        aria-label="Notificaciones"
+      >
+        <i class="fa-regular fa-bell"></i>
+      </button>
+      <button type="button" id="btn-dark-toggle" class="erp-btn secondary !p-2 !px-2.5" title="Tema" aria-label="Tema">
+        <i class="fa-solid fa-moon" id="icon-dark"></i>
+      </button>
+      <button
+        type="button"
+        id="btn-sync"
+        class="erp-btn secondary !p-2 !px-2.5 hidden"
+        title="Resincronizar datos"
+        aria-label="Sincronizar"
+      >
+        <i class="fa-solid fa-rotate"></i>
+      </button>
+      <span id="header-user" class="text-xs text-slate-500 dark:text-slate-400 max-w-[32vw] truncate hidden"></span>
+      <button type="button" class="erp-btn secondary !text-xs !py-1.5 !px-2.5" id="btn-signout" hidden>
+        Salir
+      </button>
+    </span>
+  </header>
+
+  <main class="flex flex-1 flex-col min-h-0 overflow-hidden">
+    <div id="login-root" class="flex-1 overflow-y-auto px-4 py-8 max-w-md mx-auto w-full" x-data="{}">
+      <form
+        id="login-form"
+        class="login-hero"
+        x-show="!$store.deviceGate.blocked && !$store.deviceGate.busy"
+        onsubmit="return false"
+      >
+        <h2 style="margin:0;font-size:1.2rem;">Iniciar sesión</h2>
+        <p class="muted" style="margin:8px 0 14px;line-height:1.45;">
+          Usa el <strong>correo y contraseña</strong> del usuario en Firebase (Authentication → Users). El UID solo sirve en Firestore/reglas; para entrar aquí hace falta email + password.
+        </p>
+        <label for="login-email">Correo</label>
+        <input id="login-email" type="email" autocomplete="username" placeholder="tu@correo.com" />
+        <label for="login-password" style="margin-top:10px;">Contraseña</label>
+        <input id="login-password" type="password" autocomplete="current-password" placeholder="••••••••" />
+        <div class="row" style="margin-top:14px;">
+          <button type="button" class="erp-btn touch-hit w-full" id="btn-email-login">Entrar</button>
+        </div>
+        <button type="button" class="erp-btn secondary w-full touch-hit" id="btn-password-reset" style="margin-top:10px;">
+          Enviar enlace para restablecer contraseña
+        </button>
+        <div id="auth-error" class="banner" style="margin-top:14px;text-align:left;" hidden></div>
+        <details style="margin-top:18px;text-align:left;" class="muted">
+          <summary style="cursor:pointer;font-size:0.88rem;">Opcional: entrar con Google</summary>
+          <p style="margin:10px 0;font-size:0.78rem;line-height:1.45;">
+            Solo si tu proyecto usa proveedor Google y dominios autorizados en Firebase.
+          </p>
+          <button type="button" class="erp-btn secondary w-full touch-hit" id="btn-google">Continuar con Google (popup)</button>
+          <button type="button" class="erp-btn secondary w-full touch-hit" id="btn-google-redirect" style="margin-top:8px;">
+            Google con redirección
+          </button>
+        </details>
+      </form>
+      <div
+        class="card text-center"
+        style="margin-bottom: 0"
+        x-show="$store.deviceGate.busy"
+        x-cloak
+      >
+        <p class="m-0 text-sm font-semibold text-slate-800 dark:text-slate-100">Verificando dispositivo…</p>
+        <p class="muted m-2 mb-0 text-xs">Huella del navegador (FingerprintJS). Misma pestaña / mismo perfil = mismo equipo.</p>
+      </div>
+      <div
+        class="rounded-2xl border-2 border-rose-600 bg-rose-50 p-4 dark:border-rose-500 dark:bg-rose-950/40"
+        x-show="$store.deviceGate.blocked"
+        x-cloak
+      >
+        <h2 class="m-0 text-lg font-bold text-rose-800 dark:text-rose-100">Dispositivo no autorizado</h2>
+        <p class="muted mt-2 text-left text-xs leading-relaxed" x-text="$store.deviceGate.pendingEmail ? ('Cuenta: ' + $store.deviceGate.pendingEmail) : ''"></p>
+        <p class="mt-2 text-left text-sm text-rose-900 dark:text-rose-100">
+          Este navegador no coincide con el equipo registrado. Introduce el <strong>PIN maestro</strong> para registrar este equipo (válido 24 h) o pide a un admin que borre dispositivos.
+        </p>
+        <div id="device-gate-err" class="banner mt-3 text-left" x-show="$store.deviceGate.err" x-text="$store.deviceGate.err"></div>
+        <form id="device-pin-form" class="mt-3" onsubmit="return false">
+          <label class="block text-left text-xs font-semibold uppercase tracking-wide text-rose-800 dark:text-rose-200">PIN desarrollo</label>
+          <input
+            id="input-device-dev-pin"
+            type="password"
+            class="mt-1 w-full rounded-xl border-2 border-rose-600 bg-white px-3 py-3 text-base text-slate-900 shadow-inner dark:bg-slate-900 dark:text-slate-50"
+            placeholder="PIN"
+            autocomplete="off"
+            x-model="$store.deviceGate.devPin"
+          />
+          <div class="row mt-4">
+            <button type="button" class="erp-btn touch-hit w-full" id="btn-device-pin-submit">Desbloquear con PIN</button>
+          </div>
+        </form>
+        <button type="button" class="erp-btn secondary mt-3 w-full touch-hit" id="btn-device-gate-signout">Cerrar sesión</button>
+      </div>
+    </div>
+
+    <div
+      id="app-root"
+      hidden
+      class="relative flex flex-1 flex-col min-h-0"
+      x-data="erpFocus()"
+      x-cloak
+    >
+      <select
+        id="erp-dev-role"
+        class="fixed top-14 right-2 z-[60] max-w-[140px] rounded-lg border border-slate-300 bg-white px-2 py-1.5 text-xs shadow dark:border-slate-600 dark:bg-slate-800"
+        title="Testing: forzar rol UI (no admin)"
+      >
+        <option value="">Rol: automático</option>
+        <option value="cajero">Forzar cajero</option>
+        <option value="empleado">Forzar empleado</option>
+      </select>
+
+      <div class="flex flex-1 min-h-0 items-center justify-center overflow-y-auto overflow-x-hidden p-3 pt-16 pb-8">
+        <div
+          class="flex w-full max-w-[500px] min-h-[min(520px,85vh)] flex-col rounded-3xl border border-base-300 bg-base-100 shadow-2xl"
+        >
+          <div class="border-b border-base-300 px-4 py-3 text-center">
+            <p class="m-0 text-xs uppercase tracking-wide text-base-content/60">Estación</p>
+            <p class="m-0 text-lg font-bold text-base-content" x-text="'Hola, ' + roleLabel() + ' 👋'"></p>
+            <p class="mt-1 m-0 text-sm text-base-content/70">¿Qué haremos hoy?</p>
+          </div>
+
+          <div class="relative flex-1 overflow-y-auto p-4">
+            <div
+              x-show="view === 'home'"
+              x-transition.opacity.duration.200ms
+              class="grid grid-cols-2 gap-3"
+            >
+              <button
+                type="button"
+                class="btn btn-lg h-28 flex-col gap-2 rounded-2xl border-0 bg-emerald-600 text-white hover:bg-emerald-700 touch-hit"
+                x-show="uiRole() === 'admin' || uiRole() === 'cajero'"
+                @click="view = 'caja'"
+              >
+                <i class="fa-solid fa-cash-register text-2xl"></i>
+                <span class="text-sm font-semibold leading-tight">Caja</span>
+              </button>
+              <button
+                type="button"
+                class="btn btn-lg h-28 flex-col gap-2 rounded-2xl border border-base-300 bg-base-200 touch-hit"
+                x-show="uiRole() === 'empleado' || uiRole() === 'admin'"
+                @click="view = 'nomina'"
+              >
+                <i class="fa-solid fa-wallet text-2xl"></i>
+                <span class="text-sm font-semibold leading-tight">Mi nómina</span>
+              </button>
+              <button
+                type="button"
+                class="btn btn-lg h-28 flex-col gap-2 rounded-2xl border border-base-300 bg-base-200 touch-hit"
+                x-show="uiRole() === 'empleado' || uiRole() === 'cajero' || uiRole() === 'admin'"
+                @click="trasOrig = ''; trasDest = ''; trasLines = ''; trasNote = ''; view = 'tras1'"
+              >
+                <i class="fa-solid fa-dolly text-2xl"></i>
+                <span class="text-sm font-semibold leading-tight">Traslado</span>
+              </button>
+              <button
+                type="button"
+                class="btn btn-lg h-28 flex-col gap-2 rounded-2xl border border-base-300 bg-base-200 touch-hit"
+                x-show="uiRole() === 'empleado' || uiRole() === 'cajero' || uiRole() === 'admin'"
+                @click="view = 'pago'"
+              >
+                <i class="fa-solid fa-building-columns text-2xl"></i>
+                <span class="text-sm font-semibold leading-tight">Pago transfer.</span>
+              </button>
+              <button
+                type="button"
+                class="btn btn-lg h-28 flex-col gap-2 rounded-2xl border border-base-300 bg-base-200 touch-hit"
+                x-show="uiRole() === 'admin' || uiRole() === 'cajero'"
+                @click="view = 'compra'"
+              >
+                <i class="fa-solid fa-bag-shopping text-2xl"></i>
+                <span class="text-sm font-semibold leading-tight">Compra caja</span>
+              </button>
+              <button
+                type="button"
+                class="btn btn-lg h-28 flex-col gap-2 rounded-2xl border border-base-300 bg-amber-100 touch-hit"
+                x-show="uiRole() === 'admin'"
+                @click="view = 'admin'"
+              >
+                <i class="fa-solid fa-screwdriver-wrench text-2xl"></i>
+                <span class="text-sm font-semibold leading-tight">Admin / más</span>
+              </button>
+            </div>
+
+            <div x-show="view === 'tras1'" x-transition.opacity.duration.200ms class="space-y-4" style="display: none">
+              <p class="m-0 text-sm font-semibold text-base-content">Paso 1 — Origen</p>
+              <select class="select select-bordered select-lg w-full text-lg" x-model="trasOrig">
+                <option value="">Elige bodega origen</option>
+                <option value="Bodega principal">Bodega principal</option>
+                <option value="Isla / surtidor">Isla / surtidor</option>
+                <option value="Almacén secundario">Almacén secundario</option>
+                <option value="Vehículo / ruta">Vehículo / ruta</option>
+              </select>
+              <button
+                type="button"
+                class="btn btn-primary btn-block btn-lg touch-hit"
+                @click="trasOrig ? (view = 'tras2') : alert('Elige origen')"
+              >
+                Siguiente
+              </button>
+              <button type="button" class="btn btn-ghost btn-sm" @click="home()">← Inicio</button>
+            </div>
+
+            <div x-show="view === 'tras2'" x-transition.opacity.duration.200ms class="space-y-4" style="display: none">
+              <p class="m-0 text-sm font-semibold text-base-content">Paso 2 — Destino</p>
+              <select class="select select-bordered select-lg w-full text-lg" x-model="trasDest">
+                <option value="">Elige destino</option>
+                <option value="Punto de venta">Punto de venta</option>
+                <option value="Isla / surtidor">Isla / surtidor</option>
+                <option value="Bodega principal">Bodega principal</option>
+                <option value="Otro punto">Otro punto</option>
+              </select>
+              <div class="flex gap-2">
+                <button type="button" class="btn btn-ghost flex-1" @click="view = 'tras1'">Atrás</button>
+                <button
+                  type="button"
+                  class="btn btn-primary flex-1 btn-lg touch-hit"
+                  @click="trasDest ? (view = 'tras3') : alert('Elige destino')"
+                >
+                  Siguiente
+                </button>
+              </div>
+            </div>
+
+            <div x-show="view === 'tras3'" x-transition.opacity.duration.200ms class="space-y-4" style="display: none">
+              <p class="m-0 text-sm font-semibold text-base-content">Paso 3 — Productos</p>
+              <textarea
+                class="textarea textarea-bordered w-full min-h-[140px] text-base"
+                x-model="trasLines"
+                placeholder="Una línea por ítem (SKU, cantidad, nota)"
+              ></textarea>
+              <label class="label"><span class="label-text">Nota general</span></label>
+              <input type="text" class="input input-bordered w-full" x-model="trasNote" placeholder="Opcional" />
+              <div class="rounded-xl bg-base-200 p-3 text-sm">
+                <p class="m-0 font-semibold">Resumen</p>
+                <p class="m-0 mt-1" x-text="trasOrig + ' → ' + trasDest"></p>
+              </div>
+              <div class="flex gap-2">
+                <button type="button" class="btn btn-ghost flex-1" @click="view = 'tras2'">Atrás</button>
+                <button type="button" class="btn btn-success flex-1 btn-lg touch-hit" :disabled="busy" @click="confirmTraslado()">
+                  Confirmar ✅
+                </button>
+              </div>
+            </div>
+
+            <div
+              x-show="view === 'tras_ok'"
+              x-transition.opacity.duration.200ms
+              class="flex flex-col items-center gap-4 py-6 text-center"
+              style="display: none"
+            >
+              <div class="flex h-16 w-16 items-center justify-center rounded-full bg-success/20 text-success">
+                <i class="fa-solid fa-check text-3xl"></i>
+              </div>
+              <p class="m-0 text-lg font-bold">Traslado registrado</p>
+              <p class="m-0 text-sm text-base-content/70">Quedará pendiente hasta aprobación admin.</p>
+              <button type="button" class="btn btn-primary btn-wide touch-hit" @click="home()">Volver al inicio</button>
+            </div>
+
+            <div x-show="view === 'caja'" x-transition.opacity.duration.200ms class="space-y-4" style="display: none">
+              <div
+                class="rounded-2xl bg-base-200 p-4 text-center select-none"
+                @mousedown="revealBalance = true"
+                @mouseup="revealBalance = false"
+                @mouseleave="revealBalance = false"
+                @touchstart.prevent="revealBalance = true"
+                @touchend.prevent="revealBalance = false"
+              >
+                <p class="m-0 text-xs uppercase text-base-content/60">Balance hoy (mantén presionado)</p>
+                <p class="m-0 mt-2 font-mono text-2xl font-bold tracking-widest text-emerald-700 dark:text-emerald-400">
+                  <span x-show="!revealBalance">••••••</span>
+                  <span x-show="revealBalance" x-text="$store.erp.cajaBalanceFmt"></span>
+                </p>
+                <p class="mt-2 m-0 text-xs text-base-content/50">
+                  Transferencias hoy: <span x-text="$store.erp.cajaTransferTodayFmt"></span>
+                </p>
+              </div>
+              <div class="grid grid-cols-2 gap-2">
+                <button type="button" class="btn btn-warning btn-lg touch-hit" @click="openSaliente('GASTO')">Gasto</button>
+                <button type="button" class="btn btn-secondary btn-lg touch-hit" @click="openSaliente('ABONO')">Abono</button>
+                <button type="button" class="btn btn-info btn-lg touch-hit col-span-2" @click="openSaliente('VENTA')">
+                  Factura / venta
+                </button>
+              </div>
+              <p class="m-0 text-xs font-semibold uppercase text-base-content/60">Historial (solo lectura)</p>
+              <ul class="max-h-40 space-y-2 overflow-y-auto text-sm">
+                <template x-for="(row, idx) in $store.erp.cajaHistory" :key="idx">
+                  <li class="rounded-lg border border-base-300 bg-base-100 px-2 py-2">
+                    <span class="mr-1" :class="'badge ' + (row.badgeCls || 'pend')" x-text="row.badge"></span>
+                    <span x-text="row.line"></span>
+                    <span class="mt-1 block text-xs opacity-70" x-show="row.note" x-text="row.note"></span>
+                  </li>
+                </template>
+              </ul>
+              <button
+                type="button"
+                class="btn btn-error btn-block btn-lg touch-hit gap-2"
+                :disabled="!$store.erp.cajaHasMoves"
+                @click="typeof window.openCierreModal === 'function' && window.openCierreModal()"
+              >
+                <span class="text-xl">🔴</span> Cierre de caja
+              </button>
+              <button type="button" class="btn btn-ghost btn-sm w-full" @click="home()">← Inicio</button>
+            </div>
+
+            <div x-show="view === 'nomina'" x-transition.opacity.duration.200ms class="space-y-4 text-center" style="display: none">
+              <p class="m-0 text-sm text-base-content/70">Saldo estimado (adelantos − registros a tu nombre)</p>
+              <p class="m-0 text-3xl font-bold text-emerald-600" x-text="$store.erp.nomSaldoFmt"></p>
+              <p class="m-0 text-xs text-base-content/50">Adelantos contados: <span x-text="$store.erp.nomAdelantosCount"></span></p>
+              <button type="button" class="btn btn-ghost btn-sm w-full" @click="home()">← Inicio</button>
+            </div>
+
+            <div x-show="view === 'pago'" x-transition.opacity.duration.200ms class="space-y-3" style="display: none">
+              <label class="label"><span class="label-text">Monto</span></label>
+              <input type="number" class="input input-bordered input-lg w-full" x-model="pagoAmt" min="0" step="0.01" />
+              <label class="label"><span class="label-text">Medio</span></label>
+              <select class="select select-bordered w-full" x-model="pagoMedio">
+                <option value="nequi">Nequi</option>
+                <option value="bancolombia">Bancolombia</option>
+                <option value="daviplata">Daviplata</option>
+                <option value="otro">Otro</option>
+              </select>
+              <label class="label"><span class="label-text">Referencia / a nombre de</span></label>
+              <input type="text" class="input input-bordered w-full" x-model="pagoBen" />
+              <label class="label"><span class="label-text">Comprobante (imagen)</span></label>
+              <input type="file" class="file-input file-input-bordered w-full" accept="image/*" capture="environment" x-ref="pagoFile" />
+              <button type="button" class="btn btn-primary btn-block btn-lg touch-hit" :disabled="busy" @click="submitPago()">
+                Guardar pago
+              </button>
+              <button type="button" class="btn btn-ghost btn-sm w-full" @click="home()">← Inicio</button>
+            </div>
+
+            <div x-show="view === 'compra'" x-transition.opacity.duration.200ms class="space-y-2" style="display: none">
+              <p class="text-sm text-base-content/70">Formulario extendido (Firestore). Desplázate al panel técnico.</p>
+              <button type="button" class="btn btn-primary btn-sm" @click="document.getElementById('erp-vault')?.scrollIntoView({ behavior: 'smooth' })">
+                Ir a formulario compra
+              </button>
+              <button type="button" class="btn btn-ghost btn-sm w-full" @click="home()">← Inicio</button>
+            </div>
+
+            <div x-show="view === 'admin'" x-transition.opacity.duration.200ms class="space-y-2 text-sm" style="display: none">
+              <p class="font-semibold">Herramientas admin</p>
+              <p class="text-base-content/70">Catálogo, Informe Z, reporte cashbox, nómina admin.</p>
+              <button type="button" class="btn btn-sm" @click="document.getElementById('erp-vault')?.classList.remove('hidden'); document.getElementById('erp-vault')?.scrollIntoView({ behavior: 'smooth' })">
+                Mostrar panel técnico
+              </button>
+              <button type="button" class="btn btn-ghost btn-sm w-full" @click="home()">← Inicio</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div
+        x-show="modalSaliente"
+        class="fixed inset-0 z-[80] flex items-center justify-center bg-black/50 p-4"
+        style="display: none"
+      >
+        <div class="w-full max-w-sm rounded-2xl bg-base-100 p-4 shadow-xl" @click.outside="modalSaliente = false">
+          <p
+            class="m-0 text-lg font-bold"
+            x-text="salienteTipo === 'GASTO' ? 'Confirmar gasto' : salienteTipo === 'ABONO' ? 'Confirmar abono' : salienteTipo === 'CLOSE' ? 'Confirmar cierre de caja' : 'Confirmar venta'"
+          ></p>
+          <p class="mt-1 text-sm text-base-content/70">Revisa monto y nota antes de guardar.</p>
+          <label class="label mt-3"><span class="label-text">Monto</span></label>
+          <input type="number" class="input input-bordered w-full" x-model="salienteAmt" min="0" step="0.01" />
+          <label class="label"><span class="label-text">Nota</span></label>
+          <input type="text" class="input input-bordered w-full" x-model="salienteNote" />
+          <div class="mt-4 flex gap-2">
+            <button type="button" class="btn btn-ghost flex-1" @click="modalSaliente = false">Cancelar</button>
+            <button type="button" class="btn btn-error flex-1" :disabled="busy" @click="confirmSaliente()">Confirmar</button>
+          </div>
+        </div>
+      </div>
+
+      <div id="erp-vault" class="hidden max-w-3xl border-t border-base-300 bg-base-200 p-4 text-sm" aria-hidden="true">
+        <p class="font-semibold text-base-content">Panel técnico (Firestore)</p>
+        <div class="mt-3 space-y-4">
+          <div class="card bg-base-100 p-3">
+            <h3 class="m-0 text-sm font-bold">Compra</h3>
+            <label class="label"><span class="label-text">Proveedor</span></label>
+            <input id="compra-vendor" type="text" class="input input-bordered w-full" />
+            <label class="label"><span class="label-text">Líneas</span></label>
+            <textarea id="compra-lines" class="textarea textarea-bordered w-full"></textarea>
+            <label class="label"><span class="label-text">OCR</span></label>
+            <textarea id="compra-ocr" class="textarea textarea-bordered w-full"></textarea>
+            <div class="mt-2 flex flex-wrap gap-2">
+              <button type="button" id="btn-ocr-parse" class="btn btn-sm">OCR→líneas</button>
+              <button type="button" id="btn-compra-verify" class="btn btn-sm">Verificar</button>
+              <button type="button" id="btn-compra-export-csv" class="btn btn-sm">CSV</button>
+              <button type="button" id="btn-compra-save" class="btn btn-primary btn-sm">Guardar</button>
+            </div>
+            <pre id="compra-verify-out" class="mt-2 hidden max-h-32 overflow-auto text-xs"></pre>
+            <ul id="compra-list" class="mt-2 list-none space-y-1 p-0 text-xs"></ul>
+            <p id="compra-empty" class="text-xs opacity-60" hidden>Sin compras</p>
+          </div>
+          <div class="card bg-base-100 p-3">
+            <h3 class="m-0 text-sm font-bold">Informe Z / Reporte</h3>
+            <input id="informe-date" type="date" class="input input-bordered my-2 w-full" />
+            <div class="flex flex-wrap gap-2">
+              <button type="button" id="btn-informe-z" class="btn btn-sm">CSV movimientos</button>
+              <button type="button" id="btn-informe-reporte-csv" class="btn btn-sm">CSV facturas</button>
+            </div>
+            <div class="mt-3 grid gap-2 border-t border-base-300 pt-3">
+              <input id="rep-fecha" type="date" class="input input-bordered" />
+              <input id="rep-monto" type="number" class="input input-bordered" placeholder="Monto" />
+              <input id="rep-factura" type="text" class="input input-bordered" placeholder="Factura" />
+              <select id="rep-medio" class="select select-bordered">
+                <option>EFECTIVO</option>
+                <option>NEQUI</option>
+                <option>BANCOLOMBIA</option>
+                <option>A CREDITO</option>
+                <option>DAVIPLATA</option>
+                <option>OTRO</option>
+              </select>
+              <input id="rep-obs" type="text" class="input input-bordered" />
+              <select id="rep-estado" class="select select-bordered">
+                <option value="cancelada">cancelada</option>
+                <option value="vigente">vigente</option>
+                <option value="anulada">anulada</option>
+              </select>
+              <label class="label cursor-pointer justify-start gap-2">
+                <input id="rep-despacho" type="checkbox" class="checkbox" checked />
+                <span class="label-text">Despacho</span>
+              </label>
+              <input id="rep-detalle" type="text" class="input input-bordered" />
+              <button type="button" id="btn-rep-save" class="btn btn-sm">Guardar línea</button>
+              <input id="rep-json-file" type="file" accept=".json" class="file-input file-input-bordered" />
+              <button type="button" id="btn-rep-json-import" class="btn btn-sm">Import JSON</button>
+            </div>
+          </div>
+          <div class="card bg-base-100 p-3" data-admin-only hidden>
+            <h3 class="m-0 text-sm font-bold">Dispositivos (device lock)</h3>
+            <p class="mt-1 text-xs opacity-80">
+              Borra todas las huellas de un usuario en Firestore (<code class="text-xs">deviceBindings/…/devices</code>). El usuario podrá registrar de nuevo el primer equipo al entrar.
+            </p>
+            <label class="label"><span class="label-text">UID destino</span></label>
+            <input id="admin-wipe-uid" type="text" class="input input-bordered input-sm w-full font-mono" placeholder="UID de Firebase Auth" />
+            <button type="button" id="btn-admin-wipe-devices" class="btn btn-error btn-sm mt-2">Wipe dispositivos</button>
+            <p id="admin-wipe-msg" class="mt-2 text-xs"></p>
+          </div>
+          <div class="card bg-base-100 p-3">
+            <h3 class="m-0 text-sm font-bold">Catálogo</h3>
+            <input id="cat-q" type="search" class="input input-bordered my-2 w-full" />
+            <div class="flex flex-wrap gap-2">
+              <button type="button" id="btn-cat-load" class="btn btn-sm">Cargar</button>
+              <button type="button" id="btn-cat-seed" data-admin-only class="btn btn-sm">Seed</button>
+              <input id="cat-csv" type="file" data-admin-only class="file-input file-input-sm" />
+              <button type="button" id="btn-cat-import" data-admin-only class="btn btn-sm">Import</button>
+            </div>
+            <table class="catalog mt-2 w-full text-xs">
+              <tbody id="cat-tbody"></tbody>
+            </table>
+            <p id="cat-empty" class="text-xs opacity-60" hidden>Sin productos</p>
+          </div>
+          <div class="card bg-base-100 p-3">
+            <h3 class="m-0 text-sm font-bold">Nómina (registro)</h3>
+            <input id="nom-empleado" type="text" class="input input-bordered my-1 w-full" />
+            <input id="nom-periodo" type="text" class="input input-bordered my-1 w-full" />
+            <select id="nom-kind" class="select select-bordered my-1 w-full">
+              <option value="registro">registro</option>
+              <option value="adelanto">adelanto</option>
+            </select>
+            <input id="nom-monto" type="number" class="input input-bordered my-1 w-full" />
+            <input id="nom-nota" type="text" class="input input-bordered my-1 w-full" />
+            <button type="button" id="btn-nom-save" class="btn btn-sm">Guardar</button>
+            <ul id="nom-list" class="mt-2 list-none p-0 text-xs"></ul>
+            <p id="nom-empty" class="text-xs opacity-60" hidden>Sin registros</p>
+          </div>
+        </div>
+        <ul id="caja-list" class="hidden"></ul>
+        <p id="caja-empty" hidden></p>
+        <select id="caja-type" class="hidden">
+          <option value="OPEN">OPEN</option>
+          <option value="VENTA">VENTA</option>
+          <option value="GASTO">GASTO</option>
+          <option value="ABONO">ABONO</option>
+          <option value="CLOSE">CLOSE</option>
+        </select>
+        <input id="caja-amount" type="hidden" />
+        <input id="caja-note" type="hidden" />
+        <button type="button" id="btn-caja-save" class="hidden"></button>
+        <input id="tras-origen" type="hidden" />
+        <input id="tras-destino" type="hidden" />
+        <textarea id="tras-lines" class="hidden"></textarea>
+        <input id="tras-note" type="hidden" />
+        <button type="button" id="btn-tras-save" class="hidden"></button>
+        <ul id="tras-list" class="hidden"></ul>
+        <p id="tras-empty" hidden></p>
+        <input id="pago-monto" type="hidden" />
+        <select id="pago-medio" class="hidden"><option value="nequi">nequi</option></select>
+        <input id="pago-benef" type="hidden" />
+        <input id="pago-foto" type="file" class="hidden" />
+        <button type="button" id="btn-pago-save" class="hidden"></button>
+        <ul id="pago-list" class="hidden"></ul>
+        <p id="pago-empty" hidden></p>
+        <ul id="caja-rep-list" class="hidden"></ul>
+        <p id="caja-rep-empty" hidden></p>
+      </div>
+    </div>
+  </main>
+  <div class="bottom-safe"></div>
+
+  <script>
+    document.addEventListener('alpine:init', function () {
+      Alpine.store('deviceGate', {
+        blocked: false,
+        busy: false,
+        err: '',
+        devPin: '',
+        pendingEmail: '',
+        reset: function () {
+          this.blocked = false;
+          this.busy = false;
+          this.err = '';
+          this.devPin = '';
+          this.pendingEmail = '';
+        },
+      });
+      Alpine.store('erp', {
+        cajaBalanceFmt: '—',
+        cajaHasMoves: false,
+        cajaTransferTodayFmt: '—',
+        cajaHistory: [],
+        nomSaldoFmt: '—',
+        nomAdelantosCount: 0,
+        userEmail: '',
+      });
+      Alpine.data('erpFocus', function () {
+        return {
+          view: 'home',
+          busy: false,
+          trasOrig: '',
+          trasDest: '',
+          trasLines: '',
+          trasNote: '',
+          revealBalance: false,
+          modalSaliente: false,
+          salienteTipo: 'GASTO',
+          salienteAmt: '',
+          salienteNote: '',
+          pagoAmt: '',
+          pagoMedio: 'nequi',
+          pagoBen: '',
+          init: function () {
+            var self = this;
+            var sel = document.getElementById('erp-dev-role');
+            if (sel) {
+              try {
+                sel.value = localStorage.getItem('miniErpDevRole') || '';
+              } catch (e) {}
+              sel.addEventListener('change', function () {
+                var v = sel.value;
+                try {
+                  if (v) localStorage.setItem('miniErpDevRole', v);
+                  else localStorage.removeItem('miniErpDevRole');
+                } catch (e) {}
+                if (typeof window.__erpApplyChrome === 'function') window.__erpApplyChrome();
+                self.home();
+              });
+            }
+          },
+          uiRole: function () {
+            return typeof window.__erpEffectiveRole === 'function' ? window.__erpEffectiveRole() : 'cajero';
+          },
+          roleLabel: function () {
+            var m = { admin: 'Admin', cajero: 'Cajero', empleado: 'Empleado' };
+            return m[this.uiRole()] || 'Usuario';
+          },
+          home: function () {
+            this.view = 'home';
+            this.modalSaliente = false;
+            this.revealBalance = false;
+          },
+          openSaliente: function (t) {
+            this.salienteTipo = t;
+            this.salienteAmt = '';
+            this.salienteNote = '';
+            this.modalSaliente = true;
+          },
+          confirmSaliente: function () {
+            var self = this;
+            var amt = parseFloat(self.salienteAmt);
+            if (!window.__MINIERP || !window.__MINIERP.addCaja) return;
+            if (!isFinite(amt) || amt < 0) {
+              alert('Monto inválido');
+              return;
+            }
+            self.busy = true;
+            window.__MINIERP
+              .addCaja(self.salienteTipo, amt, self.salienteNote || '')
+              .then(function () {
+                self.modalSaliente = false;
+                self.salienteAmt = '';
+                self.salienteNote = '';
+              })
+              .catch(function (e) {
+                alert((e && e.message) || String(e));
+              })
+              .finally(function () {
+                self.busy = false;
+              });
+          },
+          confirmTraslado: function () {
+            var self = this;
+            if (!window.__MINIERP || !window.__MINIERP.saveTraslado) return;
+            self.busy = true;
+            window.__MINIERP
+              .saveTraslado({
+                from: self.trasOrig,
+                to: self.trasDest,
+                lines: self.trasLines,
+                note: self.trasNote,
+              })
+              .then(function () {
+                self.trasLines = '';
+                self.trasNote = '';
+                self.trasOrig = '';
+                self.trasDest = '';
+                self.view = 'tras_ok';
+              })
+              .catch(function (e) {
+                alert((e && e.message) || String(e));
+              })
+              .finally(function () {
+                self.busy = false;
+              });
+          },
+          submitPago: function () {
+            var self = this;
+            var inp = self.$refs.pagoFile;
+            var file = inp && inp.files && inp.files[0];
+            if (!window.__MINIERP || !window.__MINIERP.savePagoTransfer) return;
+            var amount = parseFloat(self.pagoAmt);
+            if (!isFinite(amount) || amount <= 0) {
+              alert('Monto inválido');
+              return;
+            }
+            if (!(self.pagoBen || '').trim()) {
+              alert('Referencia obligatoria');
+              return;
+            }
+            if (!file) {
+              alert('Adjunta comprobante');
+              return;
+            }
+            self.busy = true;
+            window.__MINIERP
+              .savePagoTransfer(amount, self.pagoMedio, self.pagoBen.trim(), file)
+              .then(function () {
+                self.pagoAmt = '';
+                self.pagoBen = '';
+                if (inp) inp.value = '';
+                self.home();
+              })
+              .catch(function (e) {
+                alert((e && e.message) || String(e));
+              })
+              .finally(function () {
+                self.busy = false;
+              });
+          },
+        };
+      });
+    });
+  </script>
+  <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.14.3/dist/cdn.min.js"></script>
+
+  <script>
+    (function () {
+      var db, auth, storage, unsubCaja, unsubRep, unsubCompra, unsubTras, unsubNom, unsubPagos;
+      var uid = null;
+      var isAdmin = false;
+      var gateCompletedUid = null;
+      var pendingAuthUser = null;
+      var adminDeviceWired = false;
+      var lastCajaSnap = null;
+      var lastCompraSnap = null;
+      var lastNomSnap = null;
+      var lastPagosSnap = null;
+      var catalogRows = [];
+      var camStream = null;
+      var appChromeWired = false;
+      var pullListenerWired = false;
+
+      var SAMPLE_PRODUCTOS = [
+        { codigo: '0425x33', nombre: '25x33 b. adhesivo cel 100', costo: 8330, precio: 11800, stock: 0, cat: 'bolsas adhesivo' },
+        { codigo: '047x12', nombre: '7x12 b. adhesivo cel 100', costo: 1547, precio: 2200, stock: 0, cat: 'bolsas adhesivo' },
+        { codigo: '04917950', nombre: 'parafn mede impre 30x30 kl100uds', costo: 7411, precio: 8900, stock: 0, cat: 'desechables parafinado' },
+        { codigo: '04943257', nombre: 'resma sulfito region 10paq x 20unds.cu', costo: 4965, precio: 7000, stock: 0, cat: 'general' },
+        { codigo: '04974104', nombre: '48x200 cinta empaque p y c 1caja x 72', costo: 6400, precio: 8000, stock: 1, cat: 'desechables cinta' },
+      ];
+
+      function $(id) { return document.getElementById(id); }
+
+      function patchDeviceGateStore(patch) {
+        try {
+          if (typeof Alpine === 'undefined' || !Alpine.store) return;
+          var g = Alpine.store('deviceGate');
+          for (var k in patch) {
+            if (Object.prototype.hasOwnProperty.call(patch, k)) g[k] = patch[k];
+          }
+        } catch (e) {}
+      }
+
+      function resetDeviceGateUi() {
+        try {
+          if (typeof Alpine !== 'undefined' && Alpine.store) Alpine.store('deviceGate').reset();
+        } catch (e) {}
+      }
+
+      function readFpVisitorCache_() {
+        try {
+          var c = localStorage.getItem('miniErpFpVisitor');
+          if (c && String(c).length > 8) return String(c);
+        } catch (e) {}
+        try {
+          var s = sessionStorage.getItem('miniErpFpVisitor');
+          if (s && String(s).length > 8) return String(s);
+        } catch (e2) {}
+        return null;
+      }
+
+      function writeFpVisitorCache_(vid) {
+        try {
+          localStorage.setItem('miniErpFpVisitor', vid);
+        } catch (e) {}
+        try {
+          sessionStorage.setItem('miniErpFpVisitor', vid);
+        } catch (e2) {}
+      }
+
+      function getDeviceFingerprintCached() {
+        var cached = readFpVisitorCache_();
+        if (cached) return Promise.resolve(cached);
+        if (typeof FingerprintJS === 'undefined') {
+          return Promise.reject(new Error('FingerprintJS no cargó (CDN). Revisa la red.'));
+        }
+        return FingerprintJS.load()
+          .then(function (fp) {
+            return fp.get();
+          })
+          .then(function (result) {
+            var vid = result && result.visitorId ? String(result.visitorId) : '';
+            if (!vid) throw new Error('Huella vacía.');
+            writeFpVisitorCache_(vid);
+            return vid;
+          });
+      }
+
+      function runDeviceGateAfterAuth(user, _retry) {
+        if (!user) return;
+        if (gateCompletedUid === user.uid && uid === user.uid) return;
+        var r = _retry || 0;
+        if (typeof Alpine === 'undefined' || !Alpine.store) {
+          if (r > 40) {
+            patchDeviceGateStore({
+              busy: false,
+              blocked: true,
+              err: 'No se pudo inicializar la UI (Alpine). Recarga la página.',
+            });
+            return;
+          }
+          setTimeout(function () {
+            runDeviceGateAfterAuth(user, r + 1);
+          }, 40);
+          return;
+        }
+        pendingAuthUser = user;
+        patchDeviceGateStore({
+          busy: true,
+          err: '',
+          blocked: false,
+          pendingEmail: user.email || user.displayName || user.uid || '',
+        });
+        getDeviceFingerprintCached()
+          .then(function (fp) {
+            return user.getIdToken(false).then(function (idToken) {
+              var devPin = '';
+              try {
+                if (typeof Alpine !== 'undefined' && Alpine.store) {
+                  devPin = Alpine.store('deviceGate').devPin || '';
+                }
+              } catch (e) {}
+              return new Promise(function (resolve, reject) {
+                google.script.run
+                  .withSuccessHandler(resolve)
+                  .withFailureHandler(reject)
+                  .validateDevice(idToken, fp, devPin);
+              });
+            });
+          })
+          .then(function (res) {
+            patchDeviceGateStore({ busy: false });
+            if (res && res.allowed) {
+              gateCompletedUid = user.uid;
+              patchDeviceGateStore({ blocked: false, devPin: '', err: '' });
+              showApp(user);
+            } else {
+              patchDeviceGateStore({
+                blocked: true,
+                err: (res && res.message) || 'Dispositivo no autorizado.',
+              });
+            }
+          })
+          .catch(function (e) {
+            patchDeviceGateStore({
+              busy: false,
+              blocked: true,
+              err: (e && e.message) ? e.message : String(e),
+            });
+          });
+      }
+
+      function erpPush(patch) {
+        try {
+          if (typeof Alpine !== 'undefined' && Alpine.store) {
+            var s = Alpine.store('erp');
+            for (var k in patch) {
+              if (Object.prototype.hasOwnProperty.call(patch, k)) s[k] = patch[k];
+            }
+          }
+        } catch (e) {}
+      }
+      function money(n) {
+        var x = Number(n);
+        if (!isFinite(x)) return '—';
+        return x.toLocaleString('es-CO', { style: 'currency', currency: 'COP', maximumFractionDigits: 0 });
+      }
+
+      function showBootError(msg) {
+        var el = $('boot-error');
+        el.textContent = msg;
+        el.hidden = false;
+      }
+
+      function probeClientStorage_() {
+        var lsOk = window.__miniErpLocalStorageOk === true;
+        var ssOk = window.__miniErpSessionStorageOk === true;
+        if (!lsOk && !ssOk) {
+          showBootError(
+            'Sin almacenamiento (incógnito estricto, Tracking prevention o extensión): la sesión y la huella del dispositivo suelen fallar. ' +
+              'Usa una ventana normal, relaja el bloqueo para script.google.com o prueba otro navegador. ' +
+              'Los avisos "Tracking Prevention" en consola por CDNs (jsdelivr, etc.) no se pueden quitar desde la app; suelen ser solo del navegador.'
+          );
+        }
+      }
+      probeClientStorage_();
+
+      function showAuthError(msg) {
+        var el = $('auth-error');
+        if (!el) return;
+        if (!msg) {
+          el.textContent = '';
+          el.hidden = true;
+          return;
+        }
+        el.textContent = msg;
+        el.hidden = false;
+      }
+
+      /** Texto para auth/unauthorized-domain: Firebase solo acepta HOST, no URL con /exec */
+      function firebaseAuthDomainHint() {
+        var h = window.location.hostname || '';
+        return (
+          'En Firebase → Authentication → Settings → Authorized domains: cada fila es solo el HOST (sin https:// ni rutas como /macros/.../exec). ' +
+            'Incluye: script.google.com y script.googleusercontent.com. ' +
+            'Si aún falla, agrega también exactamente este host: «' +
+            h +
+            '». (Origen completo: ' +
+            (window.location.origin || '') +
+            ')'
+        );
+      }
+
+      function effectiveAppRole() {
+        if (isAdmin) return 'admin';
+        try {
+          var dr = localStorage.getItem('miniErpDevRole');
+          if (dr === 'empleado' || dr === 'cajero') return dr;
+        } catch (e) {}
+        var r = localStorage.getItem('miniErpAppRole');
+        if (r === 'empleado' || r === 'cajero') return r;
+        return 'cajero';
+      }
+
+      function roleMaySeeTab(tab) {
+        var r = effectiveAppRole();
+        if (r === 'admin') return true;
+        if (tab === 'catalogo') return false;
+        if (tab === 'caja' || tab === 'compras') return r === 'cajero';
+        if (tab === 'traslados') return r === 'cajero' || r === 'empleado';
+        if (tab === 'nomina' || tab === 'pagos') return true;
+        return false;
+      }
+
+      function firstAllowedTab() {
+        var order = ['caja', 'compras', 'traslados', 'nomina', 'pagos', 'catalogo'];
+        for (var i = 0; i < order.length; i++) {
+          if (roleMaySeeTab(order[i])) return order[i];
+        }
+        return 'nomina';
+      }
+
+      function setTab(name) {
+        if (!$('tab-caja')) return;
+        if (!roleMaySeeTab(name)) {
+          name = firstAllowedTab();
+        }
+        document.querySelectorAll('[data-tab-nav]').forEach(function (b) {
+          var active = b.getAttribute('data-tab') === name;
+          b.classList.toggle('nav-tab-active', active);
+          b.setAttribute('aria-current', active ? 'true' : 'false');
+        });
+        $('tab-caja').hidden = name !== 'caja';
+        $('tab-compras').hidden = name !== 'compras';
+        $('tab-traslados').hidden = name !== 'traslados';
+        $('tab-nomina').hidden = name !== 'nomina';
+        $('tab-pagos').hidden = name !== 'pagos';
+        $('tab-catalogo').hidden = name !== 'catalogo';
+        try {
+          localStorage.setItem('miniErpLastTab', name);
+        } catch (e) {}
+      }
+
+      function userBase() {
+        return db.collection('users').doc(uid);
+      }
+
+      function bindMinierpApi() {
+        window.__MINIERP = {
+          saveTraslado: function (o) {
+            return db.collection('traslados').add({
+              ownerUid: uid,
+              fromPlace: (o.from || '').trim(),
+              toPlace: (o.to || '').trim(),
+              lines: parseLinesFromText(o.lines || ''),
+              note: (o.note || '').trim(),
+              estado: 'pendiente',
+              createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+            });
+          },
+          addCaja: function (type, amount, note) {
+            return userBase().collection('cajaEvents').add({
+              type: type,
+              amount: amount,
+              note: note || '',
+              createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+            });
+          },
+          savePagoTransfer: function (amount, medio, beneficiary, file) {
+            var safe = (file.name || 'captura').replace(/[^\w.\-]+/g, '_');
+            var path = 'users/' + uid + '/pagos/' + Date.now() + '_' + safe;
+            var ref = storage.ref(path);
+            return ref
+              .put(file, { contentType: file.type || 'image/jpeg' })
+              .then(function () {
+                return ref.getDownloadURL();
+              })
+              .then(function (url) {
+                return userBase().collection('transferPayments').add({
+                  amount: amount,
+                  medio: medio,
+                  beneficiary: beneficiary,
+                  photoUrl: url,
+                  createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+                });
+              });
+          },
+        };
+      }
+
+      function detachListeners() {
+        if (unsubCaja) unsubCaja();
+        if (unsubRep) unsubRep();
+        if (unsubCompra) unsubCompra();
+        if (unsubTras) unsubTras();
+        if (unsubNom) unsubNom();
+        if (unsubPagos) unsubPagos();
+        unsubCaja = unsubRep = unsubCompra = unsubTras = unsubNom = unsubPagos = null;
+      }
+
+      function cajaBadgeMeta(type) {
+        var map = {
+          OPEN: { cls: 'open', label: 'APERTURA' },
+          CLOSE: { cls: 'close', label: 'CIERRE' },
+          VENTA: { cls: 'venta', label: 'VENTA' },
+          GASTO: { cls: 'gasto', label: 'GASTO' },
+          ABONO: { cls: 'abono', label: 'ABONO' },
+        };
+        return map[type] || { cls: 'pend', label: type || 'MOV' };
+      }
+
+      function renderCajaSnapshot(snap) {
+        lastCajaSnap = snap;
+        var ul = $('caja-list');
+        var empty = $('caja-empty');
+        var hist = [];
+        if (ul) ul.innerHTML = '';
+        if (snap.empty) {
+          if (empty) empty.hidden = false;
+          erpPush({ cajaHasMoves: false, cajaHistory: [] });
+          updateCajaDash();
+          return;
+        }
+        if (empty) empty.hidden = true;
+        snap.forEach(function (doc) {
+          var d = doc.data();
+          var meta = cajaBadgeMeta(d.type);
+          var ts = d.createdAt && d.createdAt.toDate ? d.createdAt.toDate() : null;
+          var when = ts ? ts.toLocaleString('es-CO', { timeZone: 'America/Bogota' }) : '…';
+          hist.push({
+            badge: meta.label,
+            badgeCls: meta.cls,
+            line: money(d.amount) + ' · ' + when,
+            note: d.note || '',
+          });
+          if (!ul) return;
+          var li = document.createElement('li');
+          var badge = document.createElement('span');
+          badge.className = 'badge ' + meta.cls;
+          badge.textContent = meta.label;
+          li.appendChild(badge);
+          li.appendChild(document.createTextNode(money(d.amount) + ' · ' + when));
+          if (d.note) {
+            var br = document.createElement('div');
+            br.className = 'muted';
+            br.style.marginTop = '4px';
+            br.textContent = d.note;
+            li.appendChild(br);
+          }
+          ul.appendChild(li);
+        });
+        erpPush({ cajaHasMoves: true, cajaHistory: hist.slice(0, 24) });
+        updateCajaDash();
+      }
+
+      function updateCajaDash() {
+        var dayStr = new Date().toLocaleDateString('en-CA', { timeZone: 'America/Bogota' });
+        var sums = { OPEN: 0, VENTA: 0, GASTO: 0, ABONO: 0, CLOSE: 0 };
+        if (lastCajaSnap && !lastCajaSnap.empty) {
+          lastCajaSnap.forEach(function (doc) {
+            var d = doc.data();
+            var ts = d.createdAt && d.createdAt.toDate ? d.createdAt.toDate() : null;
+            if (!ts) return;
+            if (dayKeyBogota(ts) !== dayStr) return;
+            var t = d.type || '';
+            if (!sums.hasOwnProperty(t)) return;
+            sums[t] += Number(d.amount) || 0;
+          });
+        }
+        var transfer = 0;
+        if (lastPagosSnap && !lastPagosSnap.empty) {
+          lastPagosSnap.forEach(function (doc) {
+            var d = doc.data();
+            var ts = d.createdAt && d.createdAt.toDate ? d.createdAt.toDate() : null;
+            if (!ts || dayKeyBogota(ts) !== dayStr) return;
+            transfer += Number(d.amount) || 0;
+          });
+        }
+        var bal = sums.OPEN + sums.VENTA - sums.GASTO - sums.ABONO;
+        function setText(id, v) {
+          var el = $(id);
+          if (el) el.textContent = money(v);
+        }
+        setText('dash-open', sums.OPEN);
+        setText('dash-venta', sums.VENTA);
+        setText('dash-gasto', sums.GASTO);
+        setText('dash-abono', sums.ABONO);
+        setText('dash-transfer', transfer);
+        setText('dash-balance', bal);
+        var foot = $('caja-balance-footer');
+        if (foot) {
+          foot.textContent = money(bal);
+          foot.className =
+            'font-bold ' +
+            (bal < 0 ? 'text-red-600 dark:text-red-400' : 'text-emerald-800 dark:text-emerald-300');
+        }
+        var dbal = $('dash-balance');
+        if (dbal) {
+          dbal.className =
+            'text-base font-extrabold m-0 ' +
+            (bal < 0 ? 'text-red-600 dark:text-red-400' : 'text-emerald-600 dark:text-emerald-400');
+        }
+        erpPush({
+          cajaBalanceFmt: money(bal),
+          cajaTransferTodayFmt: money(transfer),
+          cajaBalanceNeg: bal < 0,
+        });
+      }
+
+      function renderCompraSnapshot(snap) {
+        lastCompraSnap = snap;
+        var ul = $('compra-list');
+        var empty = $('compra-empty');
+        ul.innerHTML = '';
+        if (snap.empty) {
+          empty.hidden = false;
+          return;
+        }
+        empty.hidden = true;
+        snap.forEach(function (doc) {
+          var d = doc.data();
+          var li = document.createElement('li');
+          var title = document.createElement('div');
+          title.textContent = d.vendor || '(Sin proveedor)';
+          var sub = document.createElement('div');
+          sub.className = 'muted';
+          sub.style.marginTop = '4px';
+          var lines = (d.lines || []).slice(0, 4).join(' · ');
+          if ((d.lines || []).length > 4) lines += '…';
+          sub.textContent = lines || '(Sin líneas)';
+          li.appendChild(title);
+          li.appendChild(sub);
+          ul.appendChild(li);
+        });
+      }
+
+      function renderTrasSnapshot(snap) {
+        var ul = $('tras-list');
+        var empty = $('tras-empty');
+        ul.innerHTML = '';
+        if (snap.empty) {
+          empty.hidden = false;
+          return;
+        }
+        empty.hidden = true;
+        snap.forEach(function (doc) {
+          var d = doc.data();
+          var li = document.createElement('li');
+          var title = document.createElement('div');
+          title.textContent = (d.fromPlace || '—') + ' → ' + (d.toPlace || '—');
+          if (d.estado) {
+            var eb = document.createElement('span');
+            eb.className = 'badge ' + (d.estado === 'aprobado' ? 'ok' : 'pend');
+            eb.style.marginLeft = '6px';
+            eb.textContent = String(d.estado).toUpperCase();
+            title.appendChild(eb);
+          }
+          var sub = document.createElement('div');
+          sub.className = 'muted';
+          sub.style.marginTop = '4px';
+          var ts = d.createdAt && d.createdAt.toDate ? d.createdAt.toDate() : null;
+          var when = ts ? ts.toLocaleString('es-CO', { timeZone: 'America/Bogota' }) : '…';
+          var lines = (d.lines || []).slice(0, 3).join(' · ');
+          if ((d.lines || []).length > 3) lines += '…';
+          sub.textContent = when + (lines ? ' · ' + lines : '');
+          if (isAdmin && d.ownerUid && d.ownerUid !== uid) {
+            var ow = document.createElement('div');
+            ow.className = 'muted';
+            ow.style.marginTop = '4px';
+            ow.textContent = 'Solicita UID: ' + String(d.ownerUid).slice(0, 12) + '…';
+            li.appendChild(title);
+            li.appendChild(sub);
+            li.appendChild(ow);
+          } else {
+            li.appendChild(title);
+            li.appendChild(sub);
+          }
+          if (d.note) {
+            var n = document.createElement('div');
+            n.className = 'muted';
+            n.style.marginTop = '4px';
+            n.textContent = d.note;
+            li.appendChild(n);
+          }
+          if (isAdmin && d.estado === 'pendiente') {
+            var ab = document.createElement('button');
+            ab.type = 'button';
+            ab.className = 'secondary';
+            ab.style.marginTop = '8px';
+            ab.textContent = 'Aprobar';
+            ab.onclick = function () {
+              ab.disabled = true;
+              db.collection('traslados')
+                .doc(doc.id)
+                .update({
+                  estado: 'aprobado',
+                  updatedAt: firebase.firestore.FieldValue.serverTimestamp(),
+                })
+                .catch(function (e) {
+                  alert(e.message || String(e));
+                })
+                .finally(function () {
+                  ab.disabled = false;
+                });
+            };
+            li.appendChild(ab);
+          }
+          ul.appendChild(li);
+        });
+      }
+
+      function renderNomSnapshot(snap) {
+        lastNomSnap = snap;
+        var ul = $('nom-list');
+        var empty = $('nom-empty');
+        if (ul) ul.innerHTML = '';
+        if (snap.empty) {
+          if (empty) empty.hidden = false;
+          updateNominaDash();
+          return;
+        }
+        if (empty) empty.hidden = true;
+        snap.forEach(function (doc) {
+          var d = doc.data();
+          var li = document.createElement('li');
+          var title = document.createElement('div');
+          if (d.kind === 'adelanto') {
+            var kb = document.createElement('span');
+            kb.className = 'badge abono';
+            kb.style.marginRight = '6px';
+            kb.textContent = 'ADELANTO';
+            title.appendChild(kb);
+          }
+          title.appendChild(
+            document.createTextNode((d.employee || '—') + ' · ' + (d.periodLabel || '—'))
+          );
+          var sub = document.createElement('div');
+          sub.className = 'muted';
+          sub.style.marginTop = '4px';
+          var ts = d.createdAt && d.createdAt.toDate ? d.createdAt.toDate() : null;
+          var when = ts ? ts.toLocaleString('es-CO', { timeZone: 'America/Bogota' }) : '…';
+          sub.textContent = money(d.amount) + ' · ' + when;
+          if (d.note) {
+            var n = document.createElement('div');
+            n.className = 'muted';
+            n.style.marginTop = '4px';
+            n.textContent = d.note;
+            li.appendChild(title);
+            li.appendChild(sub);
+            li.appendChild(n);
+          } else {
+            li.appendChild(title);
+            li.appendChild(sub);
+          }
+          if (ul) ul.appendChild(li);
+        });
+        updateNominaDash();
+      }
+
+      function updateNominaDash() {
+        var snap = lastNomSnap;
+        var adelantosN = 0;
+        var sumAd = 0;
+        var sumReg = 0;
+        var byEmp = {};
+        if (snap && !snap.empty) {
+          snap.forEach(function (doc) {
+            var d = doc.data();
+            var emp = (d.employee || '—').trim() || '—';
+            if (!byEmp[emp]) byEmp[emp] = { ad: 0, reg: 0 };
+            if (d.kind === 'adelanto') {
+              adelantosN++;
+              var a = Number(d.amount) || 0;
+              sumAd += a;
+              byEmp[emp].ad += a;
+            } else {
+              var r = Number(d.amount) || 0;
+              sumReg += r;
+              byEmp[emp].reg += r;
+            }
+          });
+        }
+        var saldo = sumAd - sumReg;
+        var elS = $('nom-dash-saldo');
+        if (elS) elS.textContent = money(saldo);
+        var elA = $('nom-dash-adelantos');
+        if (elA) elA.textContent = String(adelantosN);
+        var tb = $('nom-dash-tbody');
+        var te = $('nom-dash-table-empty');
+        if (tb) {
+          tb.innerHTML = '';
+          var names = Object.keys(byEmp);
+          if (!names.length) {
+            if (te) te.hidden = false;
+          } else {
+            if (te) te.hidden = true;
+            names.sort();
+            names.forEach(function (name) {
+              var row = byEmp[name];
+              var tr = document.createElement('tr');
+              var est = row.ad - row.reg;
+              [name, money(row.ad), money(row.reg), money(est)].forEach(function (cell) {
+                var td = document.createElement('td');
+                td.textContent = cell;
+                tr.appendChild(td);
+              });
+              tb.appendChild(tr);
+            });
+          }
+        }
+        var email = window.__erpUserEmail || '';
+        var tok = (email.split('@')[0] || '').trim().toLowerCase();
+        var sAd = 0;
+        var sReg = 0;
+        var sAdN = 0;
+        if (snap && !snap.empty && tok) {
+          snap.forEach(function (doc) {
+            var d = doc.data();
+            var emp = (d.employee || '').toLowerCase();
+            if (emp.indexOf(tok) === -1) return;
+            if (d.kind === 'adelanto') {
+              sAd += Number(d.amount) || 0;
+              sAdN++;
+            } else {
+              sReg += Number(d.amount) || 0;
+            }
+          });
+        }
+        erpPush({
+          nomSaldoFmt: money(sAd - sReg),
+          nomAdelantosCount: sAdN,
+        });
+      }
+
+      function renderPagosSnapshot(snap) {
+        lastPagosSnap = snap;
+        var ul = $('pago-list');
+        var empty = $('pago-empty');
+        ul.innerHTML = '';
+        if (snap.empty) {
+          empty.hidden = false;
+          updateCajaDash();
+          return;
+        }
+        empty.hidden = true;
+        snap.forEach(function (doc) {
+          var d = doc.data();
+          var li = document.createElement('li');
+          var title = document.createElement('div');
+          title.textContent = money(d.amount) + ' · ' + (d.medio || '—');
+          var sub = document.createElement('div');
+          sub.className = 'muted';
+          sub.style.marginTop = '4px';
+          var ts = d.createdAt && d.createdAt.toDate ? d.createdAt.toDate() : null;
+          var when = ts ? ts.toLocaleString('es-CO', { timeZone: 'America/Bogota' }) : '…';
+          sub.textContent = (d.beneficiary || '—') + ' · ' + when;
+          li.appendChild(title);
+          li.appendChild(sub);
+          if (d.photoUrl) {
+            var a = document.createElement('a');
+            a.href = d.photoUrl;
+            a.target = '_blank';
+            a.rel = 'noopener noreferrer';
+            a.className = 'muted';
+            a.style.display = 'inline-block';
+            a.style.marginTop = '6px';
+            a.textContent = 'Ver captura';
+            li.appendChild(a);
+          }
+          ul.appendChild(li);
+        });
+        updateCajaDash();
+      }
+
+      function applyRoleVisibility() {
+        var r = effectiveAppRole();
+        document.querySelectorAll('[data-role-show]').forEach(function (el) {
+          var allowed = (el.getAttribute('data-role-show') || '').split(/\s+/).filter(Boolean);
+          if (!allowed.length) return;
+          var ok = r === 'admin' || allowed.indexOf(r) !== -1;
+          el.hidden = !ok;
+        });
+        document.querySelectorAll('[data-role-tab="catalogo"]').forEach(function (el) {
+          el.hidden = r !== 'admin';
+        });
+      }
+
+      function applyAdminUi() {
+        document.querySelectorAll('[data-admin-only]').forEach(function (el) {
+          el.hidden = !isAdmin;
+        });
+        applyRoleVisibility();
+        var hr = $('header-role');
+        hr.hidden = false;
+        var r = effectiveAppRole();
+        var labels = { admin: 'Admin', cajero: 'Cajero', empleado: 'Empleado' };
+        hr.textContent = labels[r] || r;
+        var sync = $('btn-sync');
+        if (sync) sync.hidden = false;
+        var nf = $('btn-notif');
+        if (nf) nf.hidden = false;
+      }
+
+      function wireAppChrome() {
+        if (appChromeWired) return;
+        appChromeWired = true;
+        if ($('btn-dark-toggle')) {
+          $('btn-dark-toggle').onclick = function () {
+            var h = document.documentElement;
+            h.classList.toggle('dark');
+            var on = h.classList.contains('dark');
+            try {
+              localStorage.setItem('miniErpDark', on ? '1' : '0');
+            } catch (e) {}
+            var ic = $('icon-dark');
+            if (ic) ic.className = on ? 'fa-solid fa-sun' : 'fa-solid fa-moon';
+          };
+        }
+        try {
+          if (localStorage.getItem('miniErpDark') === '1') {
+            document.documentElement.classList.add('dark');
+            var i0 = $('icon-dark');
+            if (i0) i0.className = 'fa-solid fa-sun';
+          }
+        } catch (e) {}
+        if ($('btn-sync')) {
+          $('btn-sync').onclick = function () {
+            detachListeners();
+            attachListeners();
+          };
+        }
+        if ($('btn-notif')) {
+          $('btn-notif').onclick = function () {
+            alert('Sin notificaciones nuevas (demo).');
+          };
+        }
+        if ($('role-pick-cajero')) {
+          $('role-pick-cajero').onclick = function () {
+            finishRolePick('cajero');
+          };
+        }
+        if ($('role-pick-empleado')) {
+          $('role-pick-empleado').onclick = function () {
+            finishRolePick('empleado');
+          };
+        }
+        if ($('modal-cierre-close')) {
+          $('modal-cierre-close').onclick = function () {
+            $('modal-cierre').hidden = true;
+          };
+        }
+        window.openCierreModal = openCierreModal;
+        if ($('btn-cierre-csv')) {
+          $('btn-cierre-csv').onclick = function () {
+            var d = new Date().toLocaleDateString('en-CA', { timeZone: 'America/Bogota' });
+            if ($('informe-date')) $('informe-date').value = d;
+            if ($('btn-informe-z')) $('btn-informe-z').click();
+          };
+        }
+        if ($('btn-cierre-go-form')) {
+          $('btn-cierre-go-form').onclick = function () {
+            $('modal-cierre').hidden = true;
+            try {
+              var el = $('app-root');
+              if (el && typeof Alpine !== 'undefined' && Alpine.$data) {
+                var d = Alpine.$data(el);
+                d.view = 'caja';
+                d.openSaliente('CLOSE');
+              }
+            } catch (e) {}
+          };
+        }
+        document.querySelectorAll('[data-quick-caja]').forEach(function (btn) {
+          btn.addEventListener('click', function () {
+            var typ = btn.getAttribute('data-quick-caja');
+            if (!typ) return;
+            $('caja-type').value = typ;
+            if ($('caja-note') && btn.getAttribute('data-caja-credito')) {
+              $('caja-note').value = 'Factura / crédito';
+            }
+            $('caja-amount').focus();
+            setTab('caja');
+            var ms = $('main-scroll');
+            if (ms) ms.scrollTop = 0;
+          });
+        });
+        if ($('btn-quick-compra')) {
+          $('btn-quick-compra').onclick = function () {
+            setTab('compras');
+          };
+        }
+        if ($('btn-quick-pago')) {
+          $('btn-quick-pago').onclick = function () {
+            setTab('pagos');
+          };
+        }
+        if ($('btn-nom-scroll-list')) {
+          $('btn-nom-scroll-list').onclick = function () {
+            var list = $('nom-list');
+            if (list) list.scrollIntoView({ behavior: 'smooth', block: 'start' });
+          };
+        }
+        if ($('btn-nom-focus-new')) {
+          $('btn-nom-focus-new').onclick = function () {
+            setTab('nomina');
+            var ms = $('main-scroll');
+            if (ms) ms.scrollTop = 0;
+            var el = $('nom-empleado');
+            if (el) el.focus();
+          };
+        }
+        if ($('btn-nom-approve-all')) {
+          $('btn-nom-approve-all').onclick = function () {
+            alert('Demo: enlaza aquí tu flujo de aprobación en Firestore.');
+          };
+        }
+        wireCamHandlers();
+        installPwaManifestLink();
+        if (!pullListenerWired) {
+          pullListenerWired = true;
+          var ms = $('main-scroll');
+          if (ms) {
+            var yPull = 0;
+            ms.addEventListener(
+              'touchstart',
+              function (e) {
+                if (e.touches[0]) yPull = e.touches[0].clientY;
+              },
+              { passive: true }
+            );
+            ms.addEventListener(
+              'touchend',
+              function (e) {
+                if (!$('app-root') || $('app-root').hidden) return;
+                if (!e.changedTouches[0]) return;
+                var dy = e.changedTouches[0].clientY - yPull;
+                if (ms.scrollTop <= 2 && dy > 72) {
+                  detachListeners();
+                  attachListeners();
+                }
+              },
+              { passive: true }
+            );
+          }
+        }
+      }
+
+      function finishRolePick(role) {
+        try {
+          localStorage.setItem('miniErpAppRole', role);
+        } catch (e) {}
+        if ($('role-modal')) $('role-modal').hidden = true;
+        if ($('app-root')) $('app-root').hidden = false;
+        applyAdminUi();
+        wireAllModules();
+      }
+
+      function openCierreModal() {
+        var m = $('modal-cierre');
+        var prev = $('cierre-preview');
+        if (!m || !prev) return;
+        var dayStr = new Date().toLocaleDateString('en-CA', { timeZone: 'America/Bogota' });
+        var sums = { OPEN: 0, VENTA: 0, GASTO: 0, ABONO: 0, CLOSE: 0 };
+        if (lastCajaSnap && !lastCajaSnap.empty) {
+          lastCajaSnap.forEach(function (doc) {
+            var d = doc.data();
+            var ts = d.createdAt && d.createdAt.toDate ? d.createdAt.toDate() : null;
+            if (!ts || dayKeyBogota(ts) !== dayStr) return;
+            var t = d.type || '';
+            if (sums.hasOwnProperty(t)) sums[t] += Number(d.amount) || 0;
+          });
+        }
+        var falt = sums.OPEN + sums.VENTA - sums.GASTO - sums.ABONO - sums.CLOSE;
+        prev.textContent =
+          'Fecha ' +
+          dayStr +
+          '\nApertura: ' +
+          money(sums.OPEN) +
+          '\nVentas: ' +
+          money(sums.VENTA) +
+          '\nGastos: ' +
+          money(sums.GASTO) +
+          '\nAbonos: ' +
+          money(sums.ABONO) +
+          '\nCierres: ' +
+          money(sums.CLOSE) +
+          '\nSaldo calc.: ' +
+          money(falt);
+        m.hidden = false;
+      }
+
+      function installPwaManifestLink() {
+        if (document.getElementById('dyn-manifest')) return;
+        try {
+          var manifest = {
+            name: 'Mini ERP',
+            short_name: 'MiniERP',
+            start_url: window.location.pathname + window.location.search,
+            display: 'standalone',
+            background_color: '#0f172a',
+            theme_color: '#0f172a',
+            lang: 'es',
+          };
+          var blob = new Blob([JSON.stringify(manifest)], { type: 'application/json' });
+          var url = URL.createObjectURL(blob);
+          var link = document.createElement('link');
+          link.id = 'dyn-manifest';
+          link.rel = 'manifest';
+          link.href = url;
+          document.head.appendChild(link);
+        } catch (e) {}
+      }
+
+      function wireCamHandlers() {
+        var v = $('cam-ocr');
+        var c = $('cam-canvas');
+        var start = $('btn-cam-start');
+        var snap = $('btn-cam-snap');
+        var stop = $('btn-cam-stop');
+        if (!v || !start) return;
+        start.onclick = function () {
+          if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+            alert('Este navegador no expone getUserMedia.');
+            return;
+          }
+          navigator.mediaDevices
+            .getUserMedia({ video: { facingMode: 'environment' }, audio: false })
+            .then(function (stream) {
+              camStream = stream;
+              v.srcObject = stream;
+              v.classList.remove('hidden');
+              v.play();
+              start.disabled = true;
+              if (snap) snap.disabled = false;
+              if (stop) stop.disabled = false;
+            })
+            .catch(function (err) {
+              alert('Cámara: ' + ((err && err.message) || String(err)));
+            });
+        };
+        if (snap) {
+          snap.onclick = function () {
+            if (!camStream || !v.videoWidth) return;
+            if (!c) return;
+            c.width = v.videoWidth;
+            c.height = v.videoHeight;
+            var ctx = c.getContext('2d');
+            ctx.drawImage(v, 0, 0);
+            var note = '\n[foto capturada ' + new Date().toISOString() + ' — describir ítems manualmente]\n';
+            var ta = $('compra-ocr');
+            if (ta) ta.value = (ta.value || '') + note;
+          };
+        }
+        if (stop) {
+          stop.onclick = function () {
+            if (camStream) {
+              camStream.getTracks().forEach(function (t) {
+                t.stop();
+              });
+              camStream = null;
+            }
+            v.srcObject = null;
+            v.classList.add('hidden');
+            start.disabled = false;
+            if (snap) snap.disabled = true;
+            stop.disabled = true;
+          };
+        }
+      }
+
+      function dayKeyBogota(date) {
+        return date.toLocaleDateString('en-CA', { timeZone: 'America/Bogota' });
+      }
+
+      function downloadText(filename, text) {
+        var blob = new Blob([text], { type: 'text/csv;charset=utf-8;' });
+        var url = URL.createObjectURL(blob);
+        var a = document.createElement('a');
+        a.href = url;
+        a.download = filename;
+        a.click();
+        URL.revokeObjectURL(url);
+      }
+
+      function escapeCsvCell(val) {
+        var s = String(val == null ? '' : val);
+        if (/[",\r\n]/.test(s)) return '"' + s.replace(/"/g, '""') + '"';
+        return s;
+      }
+
+      function knownCashboxExportKeys() {
+        return {
+          nan: true,
+          FECCHA: true,
+          'N° DE FACTURA': true,
+          'MEDIO DE PAGO': true,
+          'MONTO $': true,
+          OBSERVACION: true,
+          'ESTADO DE FACTURA': true,
+          DESPACHO: true,
+        };
+      }
+      function extradDetalleFromCashboxRow(raw) {
+        var known = knownCashboxExportKeys();
+        var parts = [];
+        Object.keys(raw || {}).forEach(function (k) {
+          if (known[k]) return;
+          var v = raw[k];
+          if (v === null || v === undefined) return;
+          if (typeof v === 'number' && !isFinite(v)) return;
+          var s = String(v);
+          if (!s || s === 'NaN') return;
+          parts.push(k + ': ' + s);
+        });
+        return parts.join(' | ');
+      }
+      function parseMontoCashbox(val) {
+        if (typeof val === 'number' && isFinite(val)) return val;
+        var s = String(val != null ? val : '').replace(/[^\d.-]/g, '');
+        var n = parseFloat(s);
+        return isFinite(n) ? n : 0;
+      }
+      function despachoToBool(v) {
+        if (v === true) return true;
+        if (v === false) return false;
+        var s = String(v || '').toLowerCase();
+        return s === 'true' || s === '1' || s === 'sí' || s === 'si' || s === 'yes';
+      }
+      function firestorePayloadFromCashboxRow(raw) {
+        var fecha = String(raw.FECCHA != null ? raw.FECCHA : raw.fecha || '').trim();
+        var numeroFactura = String(
+          raw['N° DE FACTURA'] != null ? raw['N° DE FACTURA'] : raw.numeroFactura || ''
+        ).trim();
+        var medioPago = String(raw['MEDIO DE PAGO'] != null ? raw['MEDIO DE PAGO'] : raw.medioPago || '').trim();
+        var monto = parseMontoCashbox(raw['MONTO $'] != null ? raw['MONTO $'] : raw.monto);
+        var observacion = raw.OBSERVACION;
+        if (observacion === null || (typeof observacion === 'number' && !isFinite(observacion))) observacion = '';
+        observacion = String(observacion || '').trim();
+        var estadoFactura = String(
+          raw['ESTADO DE FACTURA'] != null ? raw['ESTADO DE FACTURA'] : raw.estadoFactura || 'cancelada'
+        )
+          .trim()
+          .toLowerCase();
+        var despacho = despachoToBool(raw.DESPACHO !== undefined ? raw.DESPACHO : raw.despacho);
+        var detalleManual = String(raw.detalle != null ? raw.detalle : '').trim();
+        var detalleExtra = extradDetalleFromCashboxRow(raw);
+        var detalle = [detalleManual, detalleExtra].filter(Boolean).join(' | ');
+        return {
+          fecha: fecha,
+          numeroFactura: numeroFactura,
+          medioPago: medioPago,
+          monto: monto,
+          observacion: observacion,
+          estadoFactura: estadoFactura,
+          despacho: despacho,
+          detalle: detalle,
+        };
+      }
+      function parseCashboxJsonText(text) {
+        var t = String(text || '')
+          .replace(/:\s*NaN\s*([,}\]])/g, ': null$1')
+          .replace(/:\s*-?Infinity\s*([,}\]])/g, ': null$1');
+        return JSON.parse(t);
+      }
+      function renderCajaRepSnapshot(snap) {
+        var ul = $('caja-rep-list');
+        var empty = $('caja-rep-empty');
+        ul.innerHTML = '';
+        if (snap.empty) {
+          empty.hidden = false;
+          return;
+        }
+        empty.hidden = true;
+        snap.forEach(function (doc) {
+          var d = doc.data();
+          var li = document.createElement('li');
+          var title = document.createElement('div');
+          title.textContent = (d.numeroFactura || '—') + ' · ' + money(d.monto) + ' · ' + (d.medioPago || '—');
+          var sub = document.createElement('div');
+          sub.className = 'muted';
+          sub.style.marginTop = '4px';
+          var bits = [d.fecha, d.estadoFactura || '', d.despacho ? 'DESPACHO' : ''].filter(Boolean);
+          sub.textContent = bits.join(' · ') + (d.detalle ? ' · ' + d.detalle : '');
+          li.appendChild(title);
+          li.appendChild(sub);
+          ul.appendChild(li);
+        });
+      }
+
+      function wireInformeZ() {
+        $('btn-informe-z').onclick = function () {
+          var dayStr = $('informe-date').value;
+          if (!dayStr) {
+            alert('Elige una fecha');
+            return;
+          }
+          if (!lastCajaSnap || lastCajaSnap.empty) {
+            alert('No hay movimientos en caché. Espera sincronizar o registra movimientos.');
+            return;
+          }
+          var sums = { OPEN: 0, VENTA: 0, GASTO: 0, ABONO: 0, CLOSE: 0 };
+          lastCajaSnap.forEach(function (doc) {
+            var d = doc.data();
+            var ts = d.createdAt && d.createdAt.toDate ? d.createdAt.toDate() : null;
+            if (!ts) return;
+            if (dayKeyBogota(ts) !== dayStr) return;
+            var t = d.type || '';
+            if (!sums.hasOwnProperty(t)) return;
+            sums[t] += Number(d.amount) || 0;
+          });
+          var faltantes = sums.OPEN + sums.VENTA - sums.GASTO - sums.ABONO - sums.CLOSE;
+          var line =
+            'fecha,apertura,ventas,egresos,abonos,cierre,faltantes_calc\n' +
+            [
+              dayStr,
+              sums.OPEN,
+              sums.VENTA,
+              sums.GASTO,
+              sums.ABONO,
+              sums.CLOSE,
+              faltantes,
+            ].join(',') + '\n';
+          downloadText('informe-z-' + dayStr + '.csv', line);
+        };
+        $('btn-informe-reporte-csv').onclick = function () {
+          var dayStr = $('informe-date').value;
+          if (!dayStr) {
+            alert('Elige una fecha');
+            return;
+          }
+          userBase()
+            .collection('cajaReporteLines')
+            .where('fecha', '==', dayStr)
+            .get()
+            .then(function (snap) {
+              var header = [
+                'fecha',
+                'numeroFactura',
+                'medioPago',
+                'monto',
+                'observacion',
+                'estadoFactura',
+                'despacho',
+                'detalle',
+                'createdAt_iso',
+              ];
+              var lines = [header.map(escapeCsvCell).join(',')];
+              snap.forEach(function (doc) {
+                var d = doc.data();
+                var ts = d.createdAt && d.createdAt.toDate ? d.createdAt.toDate() : null;
+                var iso = ts ? ts.toISOString() : '';
+                lines.push(
+                  [
+                    d.fecha,
+                    d.numeroFactura,
+                    d.medioPago,
+                    d.monto,
+                    d.observacion,
+                    d.estadoFactura,
+                    d.despacho ? 'true' : 'false',
+                    d.detalle,
+                    iso,
+                  ]
+                    .map(escapeCsvCell)
+                    .join(',')
+                );
+              });
+              downloadText('cashbox-reporte-' + dayStr + '.csv', lines.join('\n'));
+            })
+            .catch(function (e) {
+              alert('CSV reporte: ' + (e && e.message ? e.message : e));
+            });
+        };
+      }
+
+      function renderCatalogTable() {
+        var tb = $('cat-tbody');
+        var empty = $('cat-empty');
+        var q = (($('cat-q') && $('cat-q').value) || '').trim().toLowerCase();
+        tb.innerHTML = '';
+        var rows = catalogRows.filter(function (r) {
+          if (!q) return true;
+          return (
+            String(r.codigo || '')
+              .toLowerCase()
+              .indexOf(q) !== -1 ||
+            String(r.nombre || '')
+              .toLowerCase()
+              .indexOf(q) !== -1
+          );
+        });
+        if (!rows.length) {
+          empty.hidden = false;
+          return;
+        }
+        empty.hidden = true;
+        rows.slice(0, 400).forEach(function (r) {
+          var tr = document.createElement('tr');
+          ['codigo', 'nombre', 'costo', 'precio', 'stock', 'cat'].forEach(function (k) {
+            var td = document.createElement('td');
+            td.textContent =
+              k === 'costo' || k === 'precio' || k === 'stock'
+                ? String(r[k] != null ? r[k] : '')
+                : String(r[k] || '');
+            tr.appendChild(td);
+          });
+          tb.appendChild(tr);
+        });
+      }
+
+      function loadCatalogFromFirestore() {
+        return db
+          .collection('productos')
+          .limit(800)
+          .get()
+          .then(function (snap) {
+            catalogRows = [];
+            snap.forEach(function (d) {
+              var x = d.data() || {};
+              catalogRows.push({
+                codigo: d.id,
+                nombre: x.nombre || '',
+                costo: x.costo,
+                precio: x.precio,
+                stock: x.stock,
+                cat: x.cat || '',
+              });
+            });
+            renderCatalogTable();
+          });
+      }
+
+      function parseCatalogCsv(text) {
+        var lines = text.split(/\r?\n/).map(function (l) {
+          return l.trim();
+        }).filter(Boolean);
+        if (!lines.length) return [];
+        var header = lines[0].split(',').map(function (c) {
+          return c.trim().toLowerCase();
+        });
+        function idx(name) {
+          return header.indexOf(name);
+        }
+        var ic = idx('codigo');
+        var inom = idx('nombre');
+        if (ic === -1 || inom === -1) {
+          throw new Error('CSV debe incluir columnas codigo y nombre');
+        }
+        var iCost = idx('costo');
+        var iPre = idx('precio');
+        var iSt = idx('stock');
+        var iCat = idx('cat');
+        var out = [];
+        for (var i = 1; i < lines.length; i++) {
+          var cols = lines[i].split(',');
+          if (cols.length < 2) continue;
+          out.push({
+            codigo: (cols[ic] || '').trim(),
+            nombre: (cols[inom] || '').trim(),
+            costo: iCost !== -1 ? parseFloat(cols[iCost]) : 0,
+            precio: iPre !== -1 ? parseFloat(cols[iPre]) : 0,
+            stock: iSt !== -1 ? parseFloat(cols[iSt]) : 0,
+            cat: iCat !== -1 ? (cols[iCat] || '').trim() : '',
+          });
+        }
+        return out.filter(function (r) {
+          return r.codigo;
+        });
+      }
+
+      function wireCatalog() {
+        $('btn-cat-load').onclick = function () {
+          $('btn-cat-load').disabled = true;
+          loadCatalogFromFirestore()
+            .catch(function (e) {
+              alert('Catálogo: ' + (e && e.message ? e.message : e));
+            })
+            .finally(function () {
+              $('btn-cat-load').disabled = false;
+            });
+        };
+        $('cat-q').oninput = function () {
+          renderCatalogTable();
+        };
+        $('btn-cat-seed').onclick = function () {
+          if (!isAdmin) return;
+          var batch = db.batch();
+          var n = 0;
+          SAMPLE_PRODUCTOS.forEach(function (p) {
+            var ref = db.collection('productos').doc(String(p.codigo));
+            batch.set(
+              ref,
+              {
+                nombre: p.nombre,
+                costo: p.costo,
+                precio: p.precio,
+                stock: p.stock,
+                cat: p.cat,
+                updatedAt: firebase.firestore.FieldValue.serverTimestamp(),
+              },
+              { merge: true }
+            );
+            n++;
+          });
+          batch
+            .commit()
+            .then(function () {
+              return loadCatalogFromFirestore();
+            })
+            .catch(function (e) {
+              alert('Seed: ' + (e && e.message ? e.message : e));
+            });
+        };
+        $('btn-cat-import').onclick = function () {
+          if (!isAdmin) return;
+          var f = $('cat-csv').files && $('cat-csv').files[0];
+          if (!f) {
+            alert('Selecciona un CSV');
+            return;
+          }
+          var reader = new FileReader();
+          reader.onload = function () {
+            try {
+              var rows = parseCatalogCsv(String(reader.result || ''));
+              if (!rows.length) {
+                alert('CSV vacío o inválido');
+                return;
+              }
+              var i = 0;
+              function commitNext() {
+                if (i >= rows.length) return Promise.resolve();
+                var batch = db.batch();
+                var end = Math.min(i + 400, rows.length);
+                for (; i < end; i++) {
+                  var r = rows[i];
+                  var ref = db.collection('productos').doc(String(r.codigo));
+                  batch.set(
+                    ref,
+                    {
+                      nombre: r.nombre,
+                      costo: isFinite(r.costo) ? r.costo : 0,
+                      precio: isFinite(r.precio) ? r.precio : 0,
+                      stock: isFinite(r.stock) ? r.stock : 0,
+                      cat: r.cat || '',
+                      updatedAt: firebase.firestore.FieldValue.serverTimestamp(),
+                    },
+                    { merge: true }
+                  );
+                }
+                return batch.commit().then(commitNext);
+              }
+              commitNext()
+                .then(function () {
+                  return loadCatalogFromFirestore();
+                })
+                .catch(function (e) {
+                  alert('Import: ' + (e && e.message ? e.message : e));
+                });
+            } catch (e) {
+              alert(e.message || String(e));
+            }
+          };
+          reader.readAsText(f, 'UTF-8');
+        };
+      }
+
+      function wirePagos() {
+        $('btn-pago-save').onclick = function () {
+          var amount = parseFloat($('pago-monto').value);
+          var medio = $('pago-medio').value;
+          var beneficiary = ($('pago-benef').value || '').trim();
+          var file = $('pago-foto').files && $('pago-foto').files[0];
+          if (!isFinite(amount) || amount <= 0) {
+            alert('Monto inválido');
+            return;
+          }
+          if (!beneficiary) {
+            alert('Referencia / a nombre de es obligatorio');
+            return;
+          }
+          if (!file) {
+            alert('Adjunta captura');
+            return;
+          }
+          var btn = $('btn-pago-save');
+          btn.disabled = true;
+          var safe = (file.name || 'captura').replace(/[^\w.\-]+/g, '_');
+          var path = 'users/' + uid + '/pagos/' + Date.now() + '_' + safe;
+          var ref = storage.ref(path);
+          ref
+            .put(file, { contentType: file.type || 'image/jpeg' })
+            .then(function () {
+              return ref.getDownloadURL();
+            })
+            .then(function (url) {
+              return userBase().collection('transferPayments').add({
+                amount: amount,
+                medio: medio,
+                beneficiary: beneficiary,
+                photoUrl: url,
+                createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+              });
+            })
+            .then(function () {
+              $('pago-monto').value = '';
+              $('pago-benef').value = '';
+              $('pago-foto').value = '';
+            })
+            .catch(function (e) {
+              alert('Pago: ' + (e && e.message ? e.message : e));
+            })
+            .finally(function () {
+              btn.disabled = false;
+            });
+        };
+      }
+
+      function wireComprasVerify() {
+        $('btn-compra-verify').onclick = function () {
+          var out = $('compra-verify-out');
+          var lines = parseLinesFromText($('compra-lines').value || '');
+          if (!lines.length) {
+            if (out) {
+              out.classList.remove('hidden');
+              out.textContent = 'Sin líneas para verificar.';
+            }
+            return;
+          }
+          if (out) {
+            out.classList.remove('hidden');
+            out.textContent = 'Verificando…';
+          }
+          var tasks = lines.map(function (line) {
+            var token = (line.split(/\s+/)[0] || '').trim();
+            if (!token) return Promise.resolve(null);
+            return db
+              .collection('productos')
+              .doc(token)
+              .get()
+              .then(function (snap) {
+                if (!snap.exists) return { line: line, token: token, status: 'sin_catalogo' };
+                var row = snap.data() || {};
+                return {
+                  line: line,
+                  token: token,
+                  status: 'ok',
+                  nombre: row.nombre,
+                  costo: row.costo,
+                  precio: row.precio,
+                };
+              });
+          });
+          Promise.all(tasks).then(function (rows) {
+            var text = rows
+              .filter(Boolean)
+              .map(function (r) {
+                if (r.status === 'sin_catalogo') return '- ' + r.token + ': no está en catálogo';
+                return (
+                  '- ' +
+                  r.token +
+                  ' | ' +
+                  (r.nombre || '') +
+                  ' | costo cat ' +
+                  money(r.costo) +
+                  ' | precio cat ' +
+                  money(r.precio)
+                );
+              })
+              .join('\n');
+            if (out) out.textContent = text || 'Sin coincidencias por código (primer token de cada línea).';
+          });
+        };
+      }
+
+      function wireCaja() {
+        $('btn-caja-save').onclick = function () {
+          var type = $('caja-type').value;
+          var amount = parseFloat($('caja-amount').value);
+          var note = ($('caja-note').value || '').trim();
+          if (!isFinite(amount) || amount < 0) {
+            alert('Monto inválido');
+            return;
+          }
+          var btn = $('btn-caja-save');
+          btn.disabled = true;
+          userBase()
+            .collection('cajaEvents')
+            .add({
+              type: type,
+              amount: amount,
+              note: note,
+              createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+            })
+            .then(function () {
+              $('caja-amount').value = '';
+              $('caja-note').value = '';
+            })
+            .catch(function (e) {
+              alert('Error: ' + (e && e.message ? e.message : e));
+            })
+            .finally(function () {
+              btn.disabled = false;
+            });
+        };
+      }
+
+      function wireCajaReporte() {
+        $('btn-rep-save').onclick = function () {
+          var fecha = $('rep-fecha').value;
+          var monto = parseFloat($('rep-monto').value);
+          var numeroFactura = ($('rep-factura').value || '').trim();
+          if (!fecha || !numeroFactura || !isFinite(monto) || monto < 0) {
+            alert('Fecha, N° de factura y monto válido son obligatorios');
+            return;
+          }
+          var btn = $('btn-rep-save');
+          btn.disabled = true;
+          userBase()
+            .collection('cajaReporteLines')
+            .add({
+              fecha: fecha,
+              numeroFactura: numeroFactura,
+              medioPago: $('rep-medio').value,
+              monto: monto,
+              observacion: ($('rep-obs').value || '').trim(),
+              estadoFactura: $('rep-estado').value,
+              despacho: !!$('rep-despacho').checked,
+              detalle: ($('rep-detalle').value || '').trim(),
+              createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+              sourceSchema: 'cashbox.json REPORTE',
+            })
+            .then(function () {
+              $('rep-monto').value = '';
+              $('rep-factura').value = '';
+              $('rep-obs').value = '';
+              $('rep-detalle').value = '';
+            })
+            .catch(function (e) {
+              alert('Reporte: ' + (e && e.message ? e.message : e));
+            })
+            .finally(function () {
+              btn.disabled = false;
+            });
+        };
+        $('btn-rep-json-import').onclick = function () {
+          var f = $('rep-json-file').files && $('rep-json-file').files[0];
+          if (!f) {
+            alert('Elige cashbox.json');
+            return;
+          }
+          var reader = new FileReader();
+          reader.onload = function () {
+            try {
+              var obj = parseCashboxJsonText(String(reader.result || ''));
+              var arr = obj.REPORTE;
+              if (!Array.isArray(arr) || !arr.length) {
+                alert('JSON sin REPORTE[] válido');
+                return;
+              }
+              if (arr.length > 3000 && !confirm('Son ' + arr.length + ' líneas. ¿Continuar?')) {
+                return;
+              }
+              var i = 0;
+              function nextBatch() {
+                if (i >= arr.length) {
+                  alert('Importadas ' + arr.length + ' líneas.');
+                  $('rep-json-file').value = '';
+                  return Promise.resolve();
+                }
+                var batch = db.batch();
+                var end = Math.min(i + 400, arr.length);
+                var fallbackFecha = $('rep-fecha').value || $('informe-date').value || '';
+                for (; i < end; i++) {
+                  var ref = userBase().collection('cajaReporteLines').doc();
+                  var payload = firestorePayloadFromCashboxRow(arr[i] || {});
+                  if (!payload.fecha) payload.fecha = fallbackFecha;
+                  batch.set(ref, {
+                    fecha: payload.fecha,
+                    numeroFactura: payload.numeroFactura || '—',
+                    medioPago: payload.medioPago || 'OTRO',
+                    monto: payload.monto,
+                    observacion: payload.observacion,
+                    estadoFactura: payload.estadoFactura || 'cancelada',
+                    despacho: payload.despacho,
+                    detalle: payload.detalle,
+                    createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+                    sourceSchema: 'cashbox.json import',
+                  });
+                }
+                return batch.commit().then(nextBatch);
+              }
+              nextBatch().catch(function (e) {
+                alert('Import: ' + (e && e.message ? e.message : e));
+              });
+            } catch (e) {
+              alert('JSON: ' + (e && e.message ? e.message : e));
+            }
+          };
+          reader.readAsText(f, 'UTF-8');
+        };
+      }
+
+      function parseLinesFromText(text) {
+        return text
+          .split(/\r?\n/)
+          .map(function (s) {
+            return s.trim();
+          })
+          .filter(Boolean);
+      }
+
+      function wireCompras() {
+        $('btn-ocr-parse').onclick = function () {
+          var raw = $('compra-ocr').value || '';
+          $('compra-lines').value = parseLinesFromText(raw).join('\n');
+        };
+        $('btn-compra-save').onclick = function () {
+          var vendor = ($('compra-vendor').value || '').trim();
+          var lines = parseLinesFromText($('compra-lines').value || '');
+          if (!vendor) {
+            alert('Proveedor requerido');
+            return;
+          }
+          if (!lines.length) {
+            alert('Agrega al menos una línea');
+            return;
+          }
+          var btn = $('btn-compra-save');
+          btn.disabled = true;
+          userBase()
+            .collection('purchases')
+            .add({
+              vendor: vendor,
+              lines: lines,
+              source: ($('compra-ocr').value || '').trim() ? 'ocr' : 'manual',
+              createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+            })
+            .then(function () {
+              $('compra-vendor').value = '';
+              $('compra-lines').value = '';
+              $('compra-ocr').value = '';
+            })
+            .catch(function (e) {
+              alert('Error: ' + (e && e.message ? e.message : e));
+            })
+            .finally(function () {
+              btn.disabled = false;
+            });
+        };
+        $('btn-compra-export-csv').onclick = function () {
+          var snap = lastCompraSnap;
+          if (!snap || snap.empty) {
+            alert('No hay compras en la lista aún. Espera la sincronización.');
+            return;
+          }
+          var linesOut = [
+            ['createdAt_iso', 'proveedor', 'lineas', 'fuente'].map(escapeCsvCell).join(','),
+          ];
+          snap.forEach(function (doc) {
+            var d = doc.data();
+            var ts = d.createdAt && d.createdAt.toDate ? d.createdAt.toDate() : null;
+            var iso = ts ? ts.toISOString() : '';
+            var joined = (d.lines || []).join(' | ');
+            linesOut.push(
+              [iso, d.vendor || '', joined, d.source || ''].map(escapeCsvCell).join(',')
+            );
+          });
+          downloadText('compras-lista.csv', linesOut.join('\n'));
+        };
+      }
+
+      function wireTraslados() {
+        $('btn-tras-save').onclick = function () {
+          var fromPlace = ($('tras-origen').value || '').trim();
+          var toPlace = ($('tras-destino').value || '').trim();
+          var lines = parseLinesFromText($('tras-lines').value || '');
+          var note = ($('tras-note').value || '').trim();
+          if (!fromPlace || !toPlace) {
+            alert('Origen y destino son obligatorios');
+            return;
+          }
+          var btn = $('btn-tras-save');
+          btn.disabled = true;
+          db.collection('traslados')
+            .add({
+              ownerUid: uid,
+              fromPlace: fromPlace,
+              toPlace: toPlace,
+              lines: lines,
+              note: note,
+              estado: 'pendiente',
+              createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+            })
+            .then(function () {
+              $('tras-origen').value = '';
+              $('tras-destino').value = '';
+              $('tras-lines').value = '';
+              $('tras-note').value = '';
+            })
+            .catch(function (e) {
+              alert('Error: ' + (e && e.message ? e.message : e));
+            })
+            .finally(function () {
+              btn.disabled = false;
+            });
+        };
+      }
+
+      function wireNomina() {
+        $('btn-nom-save').onclick = function () {
+          var employee = ($('nom-empleado').value || '').trim();
+          var periodLabel = ($('nom-periodo').value || '').trim();
+          var amount = parseFloat($('nom-monto').value);
+          var note = ($('nom-nota').value || '').trim();
+          if (!employee) {
+            alert('Empleado requerido');
+            return;
+          }
+          if (!periodLabel) {
+            alert('Periodo requerido');
+            return;
+          }
+          if (!isFinite(amount) || amount < 0) {
+            alert('Monto inválido');
+            return;
+          }
+          var btn = $('btn-nom-save');
+          btn.disabled = true;
+          userBase()
+            .collection('payrollEntries')
+            .add({
+              employee: employee,
+              periodLabel: periodLabel,
+              amount: amount,
+              note: note,
+              kind: $('nom-kind').value || 'registro',
+              createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+            })
+            .then(function () {
+              $('nom-empleado').value = '';
+              $('nom-periodo').value = '';
+              $('nom-monto').value = '';
+              $('nom-nota').value = '';
+              $('nom-kind').value = 'registro';
+            })
+            .catch(function (e) {
+              alert('Error: ' + (e && e.message ? e.message : e));
+            })
+            .finally(function () {
+              btn.disabled = false;
+            });
+        };
+      }
+
+      function attachListeners() {
+        detachListeners();
+        unsubCaja = userBase()
+          .collection('cajaEvents')
+          .orderBy('createdAt', 'desc')
+          .limit(320)
+          .onSnapshot(renderCajaSnapshot, function (err) {
+            console.error(err);
+            alert('Caja sync: ' + (err && err.message ? err.message : err));
+          });
+        unsubRep = userBase()
+          .collection('cajaReporteLines')
+          .orderBy('createdAt', 'desc')
+          .limit(80)
+          .onSnapshot(renderCajaRepSnapshot, function (err) {
+            console.error(err);
+            alert('Reporte caja sync: ' + (err && err.message ? err.message : err));
+          });
+        unsubCompra = userBase()
+          .collection('purchases')
+          .orderBy('createdAt', 'desc')
+          .limit(40)
+          .onSnapshot(renderCompraSnapshot, function (err) {
+            console.error(err);
+            alert('Compras sync: ' + (err && err.message ? err.message : err));
+          });
+        unsubTras = (isAdmin
+          ? db.collection('traslados').orderBy('createdAt', 'desc').limit(100)
+          : db.collection('traslados').where('ownerUid', '==', uid).orderBy('createdAt', 'desc').limit(50)
+        ).onSnapshot(renderTrasSnapshot, function (err) {
+          console.error(err);
+          alert('Traslados sync: ' + (err && err.message ? err.message : err));
+        });
+        unsubNom = userBase()
+          .collection('payrollEntries')
+          .orderBy('createdAt', 'desc')
+          .limit(40)
+          .onSnapshot(renderNomSnapshot, function (err) {
+            console.error(err);
+            alert('Nómina sync: ' + (err && err.message ? err.message : err));
+          });
+        unsubPagos = userBase()
+          .collection('transferPayments')
+          .orderBy('createdAt', 'desc')
+          .limit(40)
+          .onSnapshot(renderPagosSnapshot, function (err) {
+            console.error(err);
+            alert('Pagos sync: ' + (err && err.message ? err.message : err));
+          });
+      }
+
+      function setInformeDefaultDate() {
+        var el = $('informe-date');
+        if (!el.value) {
+          el.value = new Date().toLocaleDateString('en-CA', { timeZone: 'America/Bogota' });
+        }
+        var rf = $('rep-fecha');
+        if (rf && !rf.value) {
+          rf.value = el.value;
+        }
+      }
+
+      function wireAdminDeviceWipe() {
+        if (adminDeviceWired) return;
+        var btn = $('btn-admin-wipe-devices');
+        if (!btn) return;
+        adminDeviceWired = true;
+        btn.onclick = function () {
+          var inp = $('admin-wipe-uid');
+          var tid = (inp && inp.value ? String(inp.value) : '').trim();
+          var msg = $('admin-wipe-msg');
+          if (!tid) {
+            if (msg) msg.textContent = 'Escribe el UID del usuario.';
+            return;
+          }
+          if (!auth || !auth.currentUser) return;
+          if (msg) msg.textContent = 'Procesando…';
+          auth.currentUser.getIdToken(true).then(function (t) {
+            google.script.run
+              .withSuccessHandler(function (r) {
+                if (msg) {
+                  msg.textContent =
+                    r && r.ok ? 'Listo: eliminados ' + (r.removed != null ? r.removed : 0) + ' documento(s).' : (r && r.message) || 'Error';
+                }
+              })
+              .withFailureHandler(function (e) {
+                if (msg) msg.textContent = (e && e.message) || String(e);
+              })
+              .adminWipeUserDevices(t, tid);
+          });
+        };
+      }
+
+      function wireAllModules() {
+        wireAppChrome();
+        bindMinierpApi();
+        wireCajaReporte();
+        wireInformeZ();
+        setInformeDefaultDate();
+        wireCompras();
+        wireComprasVerify();
+        wireNomina();
+        wirePagos();
+        wireCatalog();
+        wireAdminDeviceWipe();
+        attachListeners();
+      }
+
+      function showApp(user) {
+        uid = user.uid;
+        $('login-root').hidden = true;
+        $('app-root').hidden = true;
+        $('btn-signout').hidden = false;
+        $('header-user').hidden = false;
+        $('header-user').textContent = user.email || user.displayName || user.uid;
+        window.__erpUserEmail = user.email || '';
+        erpPush({ userEmail: window.__erpUserEmail });
+        $('btn-signout').onclick = function () {
+          detachListeners();
+          auth.signOut();
+        };
+        db.collection('admins')
+          .doc(uid)
+          .get()
+          .then(function (snap) {
+            isAdmin = snap.exists;
+          })
+          .catch(function () {
+            isAdmin = false;
+          })
+          .then(function () {
+            var needRole = !isAdmin;
+            try {
+              needRole = needRole && !localStorage.getItem('miniErpAppRole');
+            } catch (e) {
+              needRole = !isAdmin;
+            }
+            if ($('role-modal')) $('role-modal').hidden = !needRole;
+            $('app-root').hidden = needRole;
+            applyAdminUi();
+            wireAppChrome();
+            if (!needRole) {
+              wireAllModules();
+            }
+          });
+      }
+
+      function showLogin() {
+        detachListeners();
+        uid = null;
+        isAdmin = false;
+        gateCompletedUid = null;
+        pendingAuthUser = null;
+        resetDeviceGateUi();
+        appChromeWired = false;
+        $('app-root').hidden = true;
+        $('login-root').hidden = false;
+        $('btn-signout').hidden = true;
+        $('header-user').hidden = true;
+        $('header-user').textContent = '';
+        window.__erpUserEmail = '';
+        erpPush({ userEmail: '' });
+        $('header-role').hidden = true;
+        if ($('role-modal')) $('role-modal').hidden = true;
+        if ($('modal-cierre')) $('modal-cierre').hidden = true;
+        if ($('btn-sync')) $('btn-sync').hidden = true;
+        if ($('btn-notif')) $('btn-notif').hidden = true;
+      }
+
+      function initAuthFlow() {
+        if (typeof auth.useDeviceLanguage === 'function') {
+          auth.useDeviceLanguage();
+        }
+        if ($('btn-device-pin-submit')) {
+          $('btn-device-pin-submit').onclick = function () {
+            if (pendingAuthUser) runDeviceGateAfterAuth(pendingAuthUser);
+          };
+        }
+        if ($('btn-device-gate-signout')) {
+          $('btn-device-gate-signout').onclick = function () {
+            patchDeviceGateStore({ devPin: '', err: '' });
+            auth.signOut();
+          };
+        }
+        document.addEventListener('keydown', function (ev) {
+          if (ev.key !== 'Enter') return;
+          var t = ev.target;
+          if (!t || t.id !== 'input-device-dev-pin') return;
+          if (pendingAuthUser) {
+            ev.preventDefault();
+            if ($('btn-device-pin-submit')) $('btn-device-pin-submit').click();
+          }
+        });
+        auth.onAuthStateChanged(function (user) {
+          showAuthError('');
+          if (!user) {
+            gateCompletedUid = null;
+            pendingAuthUser = null;
+            resetDeviceGateUi();
+            showLogin();
+            return;
+          }
+          if (gateCompletedUid === user.uid && uid === user.uid) return;
+          runDeviceGateAfterAuth(user);
+        });
+        $('btn-email-login').onclick = function () {
+          var email = ($('login-email').value || '').trim();
+          var password = $('login-password').value || '';
+          if (!email || !password) {
+            showAuthError('Correo y contraseña son obligatorios.');
+            return;
+          }
+          var btn = $('btn-email-login');
+          btn.disabled = true;
+          showAuthError('Entrando…');
+          auth
+            .signInWithEmailAndPassword(email, password)
+            .then(function () {
+              showAuthError('');
+              $('login-password').value = '';
+            })
+            .catch(function (e) {
+              var code = e && e.code;
+              if (code === 'auth/wrong-password' || code === 'auth/user-not-found' || code === 'auth/invalid-credential') {
+                showAuthError('Correo o contraseña incorrectos, o el usuario no existe en Firebase Authentication.');
+              } else if (code === 'auth/invalid-email') {
+                showAuthError('Correo no válido.');
+              } else if (code === 'auth/user-disabled') {
+                showAuthError('Esta cuenta está deshabilitada.');
+              } else if (code === 'auth/too-many-requests') {
+                showAuthError('Demasiados intentos. Espera unos minutos o restablece la contraseña.');
+              } else {
+                showAuthError((e && e.message) || String(e));
+              }
+            })
+            .finally(function () {
+              btn.disabled = false;
+            });
+        };
+        $('btn-password-reset').onclick = function () {
+          var email = ($('login-email').value || '').trim();
+          if (!email) {
+            showAuthError('Escribe tu correo arriba y luego pulsa restablecer.');
+            return;
+          }
+          showAuthError('Enviando correo…');
+          auth
+            .sendPasswordResetEmail(email)
+            .then(function () {
+              showAuthError('Listo: revisa tu bandeja (y spam) para el enlace de restablecimiento.');
+            })
+            .catch(function (e) {
+              showAuthError((e && e.message) || String(e));
+            });
+        };
+        function submitEmailLoginOnEnter(ev) {
+          if (ev.key === 'Enter') {
+            ev.preventDefault();
+            $('btn-email-login').click();
+          }
+        }
+        $('login-email').addEventListener('keydown', submitEmailLoginOnEnter);
+        $('login-password').addEventListener('keydown', submitEmailLoginOnEnter);
+        function googleProvider() {
+          var p = new firebase.auth.GoogleAuthProvider();
+          p.setCustomParameters({ prompt: 'select_account' });
+          p.addScope('profile');
+          p.addScope('email');
+          return p;
+        }
+        $('btn-google').onclick = function () {
+          showAuthError('Abriendo Google…');
+          var provider = googleProvider();
+          auth
+            .signInWithPopup(provider)
+            .then(function () {
+              showAuthError('');
+            })
+            .catch(function (e) {
+              var code = e && e.code;
+              if (code === 'auth/popup-blocked' || code === 'auth/popup-closed-by-user') {
+                showAuthError(
+                  'Ventana emergente bloqueada o cerrada. Permite popups para script.google.com o usa el botón «redirección» abajo.'
+                );
+                return;
+              }
+              if (code === 'auth/unauthorized-domain') {
+                showAuthError(firebaseAuthDomainHint());
+                return;
+              }
+              if (code === 'auth/operation-not-supported-in-this-environment') {
+                showAuthError('Este entorno no permite pop-up. Usa el botón de redirección.');
+                return;
+              }
+              showAuthError((e && e.message) || String(e));
+            });
+        };
+        $('btn-google-redirect').onclick = function () {
+          showAuthError('Redirigiendo a Google…');
+          auth.signInWithRedirect(googleProvider());
+        };
+        return auth
+          .getRedirectResult()
+          .then(function () {
+            showAuthError('');
+          })
+          .catch(function (e) {
+            if (e && e.code === 'auth/unauthorized-domain') {
+              showAuthError(firebaseAuthDomainHint());
+            } else if (e && e.code && e.code !== 'auth/popup-closed-by-user') {
+              console.warn(e);
+            }
+          });
+      }
+
+      window.__erpEffectiveRole = effectiveAppRole;
+      window.__erpApplyChrome = applyAdminUi;
+
+      function boot() {
+        google.script.run
+          .withSuccessHandler(function (cfg) {
+            try {
+              if (!firebase.apps.length) {
+                firebase.initializeApp(cfg);
+              }
+              auth = firebase.auth();
+              db = firebase.firestore();
+              storage = firebase.storage();
+              db
+                .enablePersistence({ synchronizeTabs: true })
+                .catch(function (err) {
+                  if (err.code === 'failed-precondition') {
+                    console.warn('Persistence: multi-tab');
+                  } else if (err.code === 'unimplemented') {
+                    console.warn('Persistence: not available');
+                  }
+                })
+                .then(function () {
+                  initAuthFlow();
+                });
+            } catch (e) {
+              showBootError('Firebase: ' + (e && e.message ? e.message : e));
+            }
+          })
+          .withFailureHandler(function (err) {
+            showBootError(err.message || String(err));
+          })
+          .getFirebaseWebConfig();
+      }
+
+      boot();
+    })();
+  </script>
+</body>
+</html>

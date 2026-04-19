@@ -1,0 +1,10 @@
+README.md
+AGENTS.md
+AGENT_SETUP_STATUS.md
+docs/**
+examples/**
+mobile/**
+firestore.rules
+.gitignore
+**/.snapshots/**
+cashbox.json
