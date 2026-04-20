@@ -196,67 +196,83 @@ function verifyIdTokenAndUser_(idToken) {
   var u = data.users[0];
   return { uid: u.localId, email: u.email || '' };
 }
-
+/**
+ * Genera el JWT incluyendo el 'kid' y limpieza estricta.
+ */
 function createServiceJwt_(sa) {
-  var header = Utilities.base64EncodeWebSafe(JSON.stringify({ alg: 'RS256', typ: 'JWT' }));
+  // 1. Header con KID: Crucial para que Google localice la llave pública rápidamente
+  var headerObj = { 
+    alg: 'RS256', 
+    typ: 'JWT',
+    kid: sa.private_key_id 
+  };
+  var header = Utilities.base64EncodeWebSafe(JSON.stringify(headerObj));
   
-  // Margen de 2 minutos para evitar líos de reloj/VPN
-  var now = Math.floor(Date.now() / 1000) - 120; 
-
+  // 2. Payload (Claim Set)
+  var now = Math.floor(Date.now() / 1000);
   var claim = {
     iss: sa.client_email.trim(),
     sub: sa.client_email.trim(),
-    scope: DEVICE_LOCK_SCOPE_.trim(),
+    scope: "https://www.googleapis.com/auth/datastore",
     aud: 'https://oauth2.googleapis.com/token',
-    iat: now,
+    iat: now - 60, 
     exp: now + 3600
   };
-  
   var payload = Utilities.base64EncodeWebSafe(JSON.stringify(claim));
+  
+  // 3. String a firmar
   var toSign = header + '.' + payload;
   
-  // --- LIMPIEZA TOTAL DE PEM ---
-  // Extraemos solo el cuerpo de la clave, quitando encabezados y saltos de línea basura
+  // 4. Limpieza de Clave Privada (Soporta PKCS#1 y PKCS#8)
   var pkRaw = sa.private_key
-    .replace(/\\n/g, '\n')
-    .replace(/-----BEGIN PRIVATE KEY-----/g, '')
-    .replace(/-----END PRIVATE KEY-----/g, '')
-    .replace(/\s+/g, ''); // Quitamos TODO espacio/salto
+    .replace(/-----BEGIN (RSA )?PRIVATE KEY-----/g, '')
+    .replace(/-----END (RSA )?PRIVATE KEY-----/g, '')
+    .replace(/\\n/g, '') // Quita saltos escapados
+    .replace(/\s+/g, ''); // Quita espacios y saltos reales
   
-  // Re-formateamos al estilo estándar que Google acepta 100%
+  // Re-armado estándar para Utilities.computeRsaSha256Signature
   var cleanPem = "-----BEGIN PRIVATE KEY-----\n" + 
                  pkRaw.match(/.{1,64}/g).join('\n') + 
                  "\n-----END PRIVATE KEY-----";
   
+  // 5. Generación de Firma
   var sigBytes = Utilities.computeRsaSha256Signature(
-    Utilities.newBlob(toSign).getBytes(),
+    toSign, // Apps Script acepta el string directamente aquí
     cleanPem
   );
   
-  return toSign + '.' + Utilities.base64EncodeWebSafe(sigBytes);
+  var signature = Utilities.base64EncodeWebSafe(sigBytes);
+  
+  return toSign + '.' + signature;
 }
+
+/**
+ * Función de intercambio de token mejorada
+ */
 function getDatastoreAccessToken_() {
   var sa = parseServiceAccount_();
-  if (!sa) throw new Error('Falta FIREBASE_SERVICE_ACCOUNT_JSON en Script properties.');
+  if (!sa) throw new Error('Falta FIREBASE_SERVICE_ACCOUNT_JSON');
+  
   var jwt = createServiceJwt_(sa);
-  var grant = 'urn:ietf:params:oauth:grant-type:jwt-bearer';
-  var formBody =
-    'grant_type=' + encodeURIComponent(grant) + '&assertion=' + encodeURIComponent(jwt);
-  var resp = UrlFetchApp.fetch('https://oauth2.googleapis.com/token', {
+  
+  var options = {
     method: 'post',
     contentType: 'application/x-www-form-urlencoded',
-    payload: formBody,
-    muteHttpExceptions: true,
-  });
-  var http = resp.getResponseCode();
-  var body = resp.getContentText();
-  if (http !== 200) {
-    throw new Error('OAuth2 token HTTP ' + http + ': ' + body);
-  }
-  var data = JSON.parse(body);
+    payload: {
+      grant_type: 'urn:ietf:params:oauth:grant-type:jwt-bearer',
+      assertion: jwt
+    },
+    muteHttpExceptions: true
+  };
+
+  var resp = UrlFetchApp.fetch('https://oauth2.googleapis.com/token', options);
+  var resText = resp.getContentText();
+  var data = JSON.parse(resText);
+  
   if (!data.access_token) {
-    throw new Error('No se pudo obtener access_token: ' + body);
+    throw new Error('OAuth2 Falló [' + resp.getResponseCode() + ']: ' + resText);
   }
+  
   return data.access_token;
 }
 
@@ -276,51 +292,38 @@ function jwtPayloadPreview_(jwt) {
  * Paso 3 — diagnóstico completo (▶ en el editor): firma JWT + canje OAuth2 + GET mínimo a Firestore.
  * Copia el JSON impreso en Registros / resultado de ejecución (no incluye el token completo).
  */
-function DIAGNOSTICO_MAESTRO() {
-  var r = {
-    ts: new Date().toISOString(),
-    proyecto_script: getFirebaseProjectId_(),
-    jwt_firma: 'pendiente',
-    oauth2: 'pendiente',
-    firestore_list_http: null,
-    error: null,
-  };
+/**
+ * Diagnóstico Maestro corregido para ver el Payload
+ */
+function DIAGNOSTICO_DEPURACION() {
+  var results = {};
   try {
     var sa = parseServiceAccount_();
-    if (!sa) throw new Error('Falta FIREBASE_SERVICE_ACCOUNT_JSON');
-    var jwt0 = createServiceJwt_(sa);
-    r.jwt_firma = 'ok';
-    r.client_email = String(sa.client_email || '').trim();
-    r.jwt_claim_preview = jwtPayloadPreview_(jwt0);
+    results.email_en_json = sa.client_email;
+    results.project_id = sa.project_id;
+    
+    var jwt = createServiceJwt_(sa);
+    var parts = jwt.split('.');
+    
+    // Decodificar el Payload para ver qué estamos enviando
+    var payloadDecoded = Utilities.newBlob(Utilities.base64DecodeWebSafe(parts[1])).getDataAsString();
+    results.jwt_claim_enviado = JSON.parse(payloadDecoded);
+    
+    // Verificar si el tiempo del script está sincronizado
+    results.hora_actual_script = new Date().toISOString();
+    results.iat_humano = new Date(results.jwt_claim_enviado.iat * 1000).toISOString();
+    
+    // Intento de conexión
+    var token = getDatastoreAccessToken_();
+    results.oauth2 = "CONECTADO OK";
   } catch (e) {
-    r.jwt_firma = 'error';
-    r.error = e && e.message ? e.message : String(e);
-    console.log(JSON.stringify(r, null, 2));
-    return r;
+    results.oauth2 = "ERROR";
+    results.detalle_error = e.message;
   }
-  try {
-    var tok = getDatastoreAccessToken_();
-    r.oauth2 = 'ok';
-    r.access_token_length = String(tok).length;
-    r.access_token_prefix = String(tok).substring(0, 12) + '…';
-    var probe =
-      'https://firestore.googleapis.com/v1/projects/' +
-      encodeURIComponent(getFirebaseProjectId_()) +
-      '/databases/(default)/documents?pageSize=1';
-    var fr = UrlFetchApp.fetch(probe, {
-      method: 'get',
-      headers: { Authorization: 'Bearer ' + tok },
-      muteHttpExceptions: true,
-    });
-    r.firestore_list_http = fr.getResponseCode();
-  } catch (e2) {
-    r.oauth2 = 'error';
-    r.error = e2 && e2.message ? e2.message : String(e2);
-  }
-  console.log('=== DIAGNOSTICO_MAESTRO (copiar) ===');
-  console.log(JSON.stringify(r, null, 2));
-  console.log('===');
-  return r;
+  
+  console.log("=== COPIA ESTO PARA ANALIZAR ===");
+  console.log(JSON.stringify(results, null, 2));
+  console.log("===============================");
 }
 
 function firestoreBase_() {
