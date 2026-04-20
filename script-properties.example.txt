@@ -13,3 +13,5 @@ DEVICE_DEV_PIN   (optional; default en código DEV2026BUCARA — mejor definir a
 DEVICE_LOCK_DISABLED   (optional; "true" = desactiva el lock en dev sin SA)
 
 After saving properties, reload the web app deployment.
+
+Debug (Apps Script editor, run ▶): DIAGNOSTICO_MAESTRO — prueba firma JWT + OAuth2 + Firestore; copia el JSON del log.
