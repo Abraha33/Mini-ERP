@@ -8,3 +8,13 @@ firestore.rules
 .gitignore
 **/.snapshots/**
 cashbox.json
+**/**
+!**/*.gs
+!**/*.html
+!appsscript.json
+.git/**
+.trae/**
+.agents/**
+*.rar
+*firebase-adminsdk*.json
+*-firebase-adminsdk-*.json

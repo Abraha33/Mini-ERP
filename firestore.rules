@@ -1,0 +1,43 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    function isSignedIn() {
+      return request.auth != null;
+    }
+    function isAdmin() {
+      return isSignedIn()
+        && exists(/databases/$(database)/documents/admins/$(request.auth.uid));
+    }
+    match /admins/{adminId} {
+      allow get: if isSignedIn() && request.auth.uid == adminId;
+      allow list: if false;
+      allow write: if false;
+    }
+    match /productos/{codigo} {
+      allow read: if isSignedIn();
+      allow create, update, delete: if isAdmin();
+    }
+    match /traslados/{tid} {
+      allow read: if isSignedIn()
+        && (resource.data.ownerUid == request.auth.uid || isAdmin());
+      allow create: if isSignedIn()
+        && request.resource.data.ownerUid == request.auth.uid
+        && request.resource.data.estado == 'pendiente'
+        && request.resource.data.keys().hasAll(['ownerUid', 'fromPlace', 'toPlace', 'estado', 'lines']);
+      allow update: if isSignedIn()
+        && (isAdmin() || request.auth.uid == resource.data.ownerUid);
+      allow delete: if isSignedIn() && request.auth.uid == resource.data.ownerUid;
+    }
+    match /users/{userId}/{document=**} {
+      allow read, write: if isSignedIn() && request.auth.uid == userId;
+    }
+
+    // Bloqueo por dispositivo y auditoría: solo servidor (cuenta de servicio en GAS), no cliente.
+    match /deviceBindings/{document=**} {
+      allow read, write: if false;
+    }
+    match /auditDevices/{document=**} {
+      allow read, write: if false;
+    }
+  }
+}
