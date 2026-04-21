@@ -1,20 +1,42 @@
-README.md
-AGENTS.md
-AGENT_SETUP_STATUS.md
-docs/**
-examples/**
-mobile/**
-firestore.rules
+# Ignorar carpetas de sistema y Git
+.git/
+.clasp.json
+.claspignore
 .gitignore
-**/.snapshots/**
+
+# Ignorar herramientas de IA y editores
+.trae/
+.windsurf/
+.agents/
+.snapshots/
+.vscode/
+mini-erp-spec/
+skills/
+skills-lock.json
+AGENT_SETUP_STATUS.md
+AGENTS.md
+
+# Ignorar archivos de Firebase y Configuración
+.firebaserc
+firebase.json
+firestore.indexes.json
+firestore.rules
+storage.rules
 cashbox.json
-**/**
-!**/*.gs
-!**/*.html
-!appsscript.json
-.git/**
-.trae/**
-.agents/**
-*.rar
-*firebase-adminsdk*.json
-*-firebase-adminsdk-*.json
+products.xlsx
+script-properties.example.txt
+README.md
+
+# Ignorar carpetas de otros entornos
+docs/
+examples/
+mobile/
+node_modules/
+
+# --- GESTIÓN DE DUPLICADOS ---
+# Ignoramos los .js porque Apps Script prefiere .gs 
+# (O si prefieres usar .js en VS Code y que se conviertan, 
+# asegúrate de NO tener el mismo nombre con .gs)
+# Para evitar el conflicto actual, ignora los .js que ya tienen un .gs:
+Code.js
+DeviceLock.js
